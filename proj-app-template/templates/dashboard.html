@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block title %}Instructor List{% endblock %}
+
+{% block styles %}
+    .dashboard-container { 
+            padding: 20px; 
+            border: 1px solid #ccc; 
+            border-radius: 8px; 
+            max-width: 500px;
+        }
+        .session-info {
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .logout-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .logout-btn:hover { background-color: #c82333; }
+{% endblock %}
+
+{% block content %}
+    <div class="dashboard-container">
+        <h1>Welcome to your Dashboard!</h1>
+        <p>You have successfully logged in.</p>
+        
+        <div class="session-info">
+            Active Session User ID: <strong>{{ user_id }}</strong>
+        </div>
+    <!--
+        (Fun fact: If you want to, you don't even have to 
+        pass user_id=session['user_id'] in your Python route.
+         Jinja2 templates have access to the session object 
+         by default, so you could also just write {{ session['user_id'] }} directly in your HTML!) 
+        -->
+        <p><a href="/directory">Instructors Directory</a>, using a Jinja2 inherited template</p>
+        <p><a href="/logout" class="logout-btn">Log Out</a></p>
+    </div>
+{% endblock %}

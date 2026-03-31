@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}Instructor List{% endblock %}
+
+{% block styles %}
+    .instructor-list { line-height: 1.6; }
+{% endblock %}
+
+{% block content %}
+    <h2>Our Instructors</h2>
+    
+    <ul class="instructor-list">
+        {% for instructor in instructors %}
+            <li>
+                <strong>Name:</strong> {{ instructor[0] }} | 
+                <strong>Dept:</strong> {{ instructor[1] }}
+            </li>
+        {% else %}
+            <li>No instructors found (or there was an error connecting to the database).</li>
+        {% endfor %}
+    </ul>
+
+    <br>
+    <a href="/dashboard">Back to Dashboard</a>
+{% endblock %}
