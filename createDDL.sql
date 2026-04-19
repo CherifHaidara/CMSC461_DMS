@@ -90,6 +90,6 @@ CREATE TABLE Sale (
 
     CONSTRAINT fk_sale_vehicle FOREIGN KEY (vehicle_id) REFERENCES Vehicle(vehicle_id),
     CONSTRAINT fk_sale_customer FOREIGN KEY (customer_id) REFERENCES Customer(customer_id),
-    CONSTRAINT fk_sale_department FOREIGN KEY (department_id) REFERENCES Department(department_id),
-    CONSTRAINT fk_sale_employee FOREIGN KEY (employee_id) REFERENCES Employee(employee_id)
+    CONSTRAINT fk_sale_department FOREIGN KEY (department_id) REFERENCES DEPARTMENT(department_id),
+    CONSTRAINT fk_sale_employee FOREIGN KEY (employee_id) REFERENCES EMPLOYEE(employee_id)
 );
