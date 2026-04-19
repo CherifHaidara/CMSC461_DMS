@@ -118,3 +118,55 @@ INSERT INTO Sale (sale_date, sale_price, financing_option, payment_method, vehic
 -- employee with invalid department
 -- INSERT INTO EMPLOYEE (employee_id, first_name, last_name, emp_email, emp_phone, hire_date, salary, position, department_id)
 -- VALUES (11, 'Ghost', 'User', 'ghost@dealership.com', '000-000-0000', '2024-01-01', 30000.00, 'None', 99);
+
+
+
+INSERT INTO SERVICE (service_type, service_date, service_cost, customer_id, vehicle_id, employee_id, department_id) VALUES
+('Oil Change','2024-06-01',80,1,1,4,5),
+('Brake Repair','2024-06-02',300,2,2,5,5),
+('Engine Check','2024-06-03',150,3,3,4,5),
+('Tire Replacement','2024-06-04',400,4,4,5,5),
+('Battery Replacement','2024-06-05',200,5,5,4,5),
+('Transmission Fix','2024-06-06',1200,6,6,5,5),
+('Alignment','2024-06-07',100,7,7,4,5),
+('AC Repair','2024-06-08',350,8,8,5,5),
+('Inspection','2024-06-09',90,9,9,4,5),
+('Detailing','2024-06-10',180,10,10,5,5);
+
+
+INSERT INTO SERVICE_PART (part_name, quantity, part_cost, service_id) VALUES
+('Oil Filter',1,20,1),
+('Brake Pad',4,100,2),
+('Spark Plug',4,60,3),
+('Tire',4,300,4),
+('Battery',1,150,5),
+('Transmission Fluid',2,200,6),
+('Alignment Kit',1,50,7),
+('AC Compressor',1,250,8),
+('Inspection Kit',1,30,9),
+('Cleaning Kit',1,40,10);
+
+
+INSERT INTO LOAN (loan_amount, interest_rate, loan_term, monthly_payment, status, customer_id, vehicle_id) VALUES
+(20000,5.5,60,380,'approved',1,1),
+(25000,6.0,72,420,'approved',2,2),
+(30000,4.5,60,560,'pending',3,3),
+(45000,5.0,84,650,'approved',4,4),
+(55000,6.5,72,900,'rejected',5,5),
+(40000,5.8,60,770,'approved',6,6),
+(18000,4.0,48,400,'approved',7,7),
+(22000,5.2,60,430,'pending',8,8),
+(28000,6.1,72,500,'approved',9,9),
+(26000,5.9,60,480,'approved',10,10);
+
+INSERT INTO LOAN_PAYMENT (payment_date, amount, loan_id) VALUES
+('2024-07-01',380,1),
+('2024-07-02',420,2),
+('2024-07-03',560,3),
+('2024-07-04',650,4),
+('2024-07-05',900,5),
+('2024-07-06',770,6),
+('2024-07-07',400,7),
+('2024-07-08',430,8),
+('2024-07-09',500,9),
+('2024-07-10',480,10);
