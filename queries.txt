@@ -1,0 +1,61 @@
+1.Which employees belong to which department
+(
+SELECT e.first_name, e.last_name, d.department_name
+FROM EMPLOYEE e
+JOIN DEPARTMENT d ON e.department_id = d.department_id;
+)
+
+explanation: This query joins EMPLOYEE and DEPARTMENT to show which department each employee works in.
+
+
+2.How many users per role
+(
+SELECT r.role_name, COUNT(u.user_id) AS total_users
+FROM ROLE r
+LEFT JOIN USER u ON r.role_id = u.role_id
+GROUP BY r.role_name;
+
+)
+
+explanation: This query counts how many users are assigned to each role. Sales Staff and Service Staff have the most users as expected for a dealership.
+
+
+3. Which department belongs to which division
+
+(
+SELECT d.department_name, dv.division_name
+FROM DEPARTMENT d
+JOIN DIVISION dv ON d.division_id = dv.division_id;
+)
+
+explanation: This query shows the organizational hierarchy, which division each department belongs to.
+
+
+4.List all employees and their role
+(
+    SELECT e.first_name, e.last_name, r.role_name
+FROM EMPLOYEE e
+JOIN USER u ON e.employee_id = u.employee_id
+JOIN ROLE r ON u.role_id = r.role_id;
+
+)
+
+explanation: This query uses three joins to trace the connection from EMPLOYEE through USER to ROLE, showing each employee's system role.
+
+5. Count employees per division
+(
+SELECT dv.division_name, COUNT(e.employee_id) AS total_employees
+FROM DIVISION dv
+JOIN DEPARTMENT d ON dv.division_id = d.division_id
+JOIN EMPLOYEE e ON d.department_id = e.department_id
+GROUP BY dv.division_name;
+
+)
+
+Explanation:This query spans three tables to aggregate how many employees work under each division.
+
+6.Insert Reject:
+INSERT INTO DEPARTMENT (department_id, department_name, description, status, division_id)
+VALUES (11, 'Ghost Department', 'No division', 'Active', 99);
+
+Explanation: This insert is rejected because division_id 99 does not exist in the DIVISION table, demonstrating that referential integrity is enforced.
