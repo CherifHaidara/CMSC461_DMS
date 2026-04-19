@@ -183,3 +183,6 @@ INSERT INTO ACCOUNTING_TRANSACTION (transaction_type, amount, transaction_date, 
 ('Loan Payment',310,'2026-04-09',7,9),
 ('Loan Payment',370,'2026-04-10',7,10);
 
+INSERT INTO ACCOUNTING_TRANSACTION (transaction_type, amount, transaction_date, department_id, sale_id) VALUES
+('Vehicle Sale',24000,'2024-01-01',1,1),
+('Vehicle Sale',26000,'2024-01-05',1,2);
