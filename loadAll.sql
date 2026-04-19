@@ -57,6 +57,53 @@ INSERT INTO USER (user_id, username, password, employee_id, role_id) VALUES
 (9, 'cjohnson', 'hashed_pw_9', 9, 1),
 (10, 'ewhite', 'hashed_pw_10', 10, 3);
 
+-- Customers
+INSERT INTO Customer (customer_name, customer_address, customer_email) VALUES
+('John Doe','123 Main St','john@example.com'),
+('Jane Smith','456 Oak St','jane@example.com'),
+('Mike Brown','789 Pine St','mike@example.com'),
+('Sara Lee','321 Elm St','sara@example.com'),
+('Tom Clark','654 Maple St','tom@example.com'),
+('Emma Davis','987 Cedar St','emma@example.com'),
+('Chris White','147 Birch St','chris@example.com'),
+('Anna Hall','258 Walnut St','anna@example.com'),
+('David King','369 Cherry St','david@example.com'),
+('Lisa Scott','159 Spruce St','lisa@example.com');
+
+-- Phone Numbers
+INSERT INTO PhoneNumber (phone_number, customer_id) VALUES
+('111-111-1111',1), ('222-222-2222',1),
+('333-333-3333',2), ('444-444-4444',3),
+('555-555-5555',4), ('666-666-6666',5),
+('777-777-7777',6), ('888-888-8888',7),
+('999-999-9999',8), ('101-101-1010',9),
+('202-202-2020',10), ('303-303-3030',1);
+
+-- Vehicles
+INSERT INTO Vehicle (vehicle_make, vehicle_model, vehicle_year, vehicle_vin, vehicle_price, vehicle_mileage, vehicle_condition, vehicle_availability_status) VALUES
+('Toyota','Camry',2022,'VIN001',25000,10000,'used','available'),
+('Honda','Civic',2023,'VIN002',27000,5000,'used','available'),
+('Ford','F150',2021,'VIN003',35000,20000,'used','maintenance'),
+('Tesla','Model3',2024,'VIN004',45000,0,'new','available'),
+('BMW','X5',2022,'VIN005',60000,15000,'used','sold'),
+('Audi','A4',2023,'VIN006',42000,7000,'used','available'),
+('Nissan','Altima',2020,'VIN007',20000,30000,'used','available'),
+('Hyundai','Elantra',2021,'VIN008',22000,18000,'used','available'),
+('Kia','Sorento',2022,'VIN009',30000,12000,'used','sold'),
+('Chevy','Malibu',2023,'VIN010',26000,8000,'used','available');
+
+-- Sales
+INSERT INTO Sale (sale_date, sale_price, financing_option, payment_method, vehicle_id, customer_id, department_id, employee_id) VALUES
+('2024-01-01',24000,'loan','bank_transfer',1,1,1,1),
+('2024-01-05',26000,'cash','cash',2,2,1,2),
+('2024-02-10',34000,'lease','credit_card',3,3,2,3),
+('2024-02-15',45000,'loan','debit_card',4,4,3,4),
+('2024-03-01',58000,'cash','cash',5,5,1,1),
+('2024-03-10',41000,'loan','bank_transfer',6,6,2,3),
+('2024-04-01',19000,'cash','cash',7,7,1,2),
+('2024-04-15',21000,'lease','credit_card',8,8,3,4),
+('2024-05-01',29000,'loan','debit_card',9,9,1,1),
+('2024-05-10',25000,'cash','cash',10,10,2,3);
 
 -- these should fail due to constraints
 
