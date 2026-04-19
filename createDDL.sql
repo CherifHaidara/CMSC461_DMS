@@ -162,3 +162,19 @@ CREATE TABLE LOAN_PAYMENT (
 );
 
 ------ M.F end
+
+CREATE TABLE ACCOUNTING_TRANSACTION (
+    transaction_id INT AUTO_INCREMENT PRIMARY KEY,
+    transaction_type VARCHAR(50) NOT NULL,
+    amount DECIMAL(10,2) NOT NULL CHECK (amount > 0),
+    transaction_date DATE NOT NULL,
+    department_id INT NOT NULL,
+
+    sale_id INT,
+    payment_id INT,
+
+    FOREIGN KEY (department_id) REFERENCES DEPARTMENT(department_id),
+    FOREIGN KEY (sales_id) REFERENCES SALE(sale_id),
+    FOREIGN KEY (payment_id) REFERENCES LOAN_PAYMENT(payment_id)
+)
+
