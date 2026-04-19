@@ -178,5 +178,5 @@ CREATE TABLE ACCOUNTING_TRANSACTION (
     FOREIGN KEY (sale_id) REFERENCES SALE(sale_id),
     FOREIGN KEY (service_id) REFERENCES SERVICE (service_id),
     FOREIGN KEY (payment_id) REFERENCES LOAN_PAYMENT(payment_id)
-)
+);
 
