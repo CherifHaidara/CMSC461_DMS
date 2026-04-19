@@ -161,7 +161,7 @@ CREATE TABLE LOAN_PAYMENT (
     CONSTRAINT payment_amount_chk CHECK (amount > 0)
 );
 
------- M.F end
+-- M.F end
 
 CREATE TABLE ACCOUNTING_TRANSACTION (
     transaction_id INT AUTO_INCREMENT PRIMARY KEY,
