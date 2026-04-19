@@ -171,10 +171,12 @@ CREATE TABLE ACCOUNTING_TRANSACTION (
     department_id INT NOT NULL,
 
     sale_id INT,
+    service_id INT,
     payment_id INT,
 
     FOREIGN KEY (department_id) REFERENCES DEPARTMENT(department_id),
     FOREIGN KEY (sale_id) REFERENCES SALE(sale_id),
+    FOREIGN KEY (service_id) REFERENCES SERVICE (service_id),
     FOREIGN KEY (payment_id) REFERENCES LOAN_PAYMENT(payment_id)
 )
 
