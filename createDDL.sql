@@ -93,3 +93,72 @@ CREATE TABLE Sale (
     CONSTRAINT fk_sale_department FOREIGN KEY (department_id) REFERENCES DEPARTMENT(department_id),
     CONSTRAINT fk_sale_employee FOREIGN KEY (employee_id) REFERENCES EMPLOYEE(employee_id)
 );
+
+
+-- Muntasir Fahim Part
+
+CREATE TABLE SERVICE (
+    service_id INT AUTO_INCREMENT PRIMARY KEY,
+    service_type VARCHAR(100) NOT NULL,
+    service_date DATE NOT NULL,
+    service_cost DECIMAL(10,2) NOT NULL,
+
+    customer_id INT NOT NULL,
+    vehicle_id INT NOT NULL,
+    employee_id INT NOT NULL,
+    department_id INT NOT NULL,
+
+    FOREIGN KEY (customer_id) REFERENCES Customer(customer_id),
+    FOREIGN KEY (vehicle_id) REFERENCES Vehicle(vehicle_id),
+    FOREIGN KEY (employee_id) REFERENCES EMPLOYEE(employee_id),
+    FOREIGN KEY (department_id) REFERENCES DEPARTMENT(department_id),
+
+    CONSTRAINT service_cost_chk CHECK (service_cost >= 0)
+);
+
+
+CREATE TABLE SERVICE_PART (
+    service_part_id INT AUTO_INCREMENT PRIMARY KEY,
+    part_name VARCHAR(100) NOT NULL,
+    quantity INT NOT NULL,
+    part_cost DECIMAL(10,2) NOT NULL,
+    service_id INT NOT NULL,
+
+    FOREIGN KEY (service_id) REFERENCES SERVICE(service_id),
+
+    CONSTRAINT quantity_chk CHECK (quantity > 0),
+    CONSTRAINT part_cost_chk CHECK (part_cost >= 0)
+);
+
+
+CREATE TABLE LOAN (
+    loan_id INT AUTO_INCREMENT PRIMARY KEY,
+    loan_amount DECIMAL(10,2) NOT NULL,
+    interest_rate DECIMAL(5,2) NOT NULL,
+    loan_term INT NOT NULL,
+    monthly_payment DECIMAL(10,2) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+
+    customer_id INT NOT NULL,
+    vehicle_id INT NOT NULL,
+
+    FOREIGN KEY (customer_id) REFERENCES Customer(customer_id),
+    FOREIGN KEY (vehicle_id) REFERENCES Vehicle(vehicle_id),
+
+    CONSTRAINT loan_amount_chk CHECK (loan_amount > 0),
+    CONSTRAINT interest_rate_chk CHECK (interest_rate >= 0)
+);
+
+
+CREATE TABLE LOAN_PAYMENT (
+    payment_id INT AUTO_INCREMENT PRIMARY KEY,
+    payment_date DATE NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    loan_id INT NOT NULL,
+
+    FOREIGN KEY (loan_id) REFERENCES LOAN(loan_id),
+
+    CONSTRAINT payment_amount_chk CHECK (amount > 0)
+);
+
+------ M.F end

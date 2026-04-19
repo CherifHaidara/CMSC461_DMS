@@ -59,3 +59,64 @@ INSERT INTO DEPARTMENT (department_id, department_name, description, status, div
 VALUES (11, 'Ghost Department', 'No division', 'Active', 99);
 
 Explanation: This insert is rejected because division_id 99 does not exist in the DIVISION table, demonstrating that referential integrity is enforced.
+
+
+
+7.
+SELECT v.vehicle_id, v.vehicle_make, s.service_type, s.service_date
+FROM Vehicle v
+JOIN SERVICE s ON v.vehicle_id = s.vehicle_id;
+
+Explanation:
+This shows all the services done on each vehicle. It connects the Vehicle and SERVICE tables so we can see the service history.
+
+8. 
+SELECT SUM(service_cost) AS total_revenue
+FROM SERVICE;
+
+Explanation:
+This adds up all the service costs to get the total money made from services.
+
+
+9.
+SELECT l.loan_id, c.customer_name, lp.amount, lp.payment_date
+FROM LOAN l
+JOIN Customer c ON l.customer_id = c.customer_id
+JOIN LOAN_PAYMENT lp ON l.loan_id = lp.loan_id;
+
+Explanation:
+This shows each loan along with the customer and their payments. It combines multiple tables to give more complete info.
+
+10.
+SELECT customer_id, AVG(loan_amount) AS avg_loan
+FROM LOAN
+GROUP BY customer_id;
+
+Explanation:
+This finds the average loan amount for each customer. It groups the loans by customer to do that.
+
+11.
+SELECT vehicle_id, vehicle_make, vehicle_model
+FROM Vehicle
+WHERE vehicle_availability_status = 'maintenance';
+
+Explanation:
+This lists all vehicles that are currently in maintenance.
+
+12.
+SELECT e.first_name, e.last_name, COUNT(s.service_id) AS total_services
+FROM EMPLOYEE e
+JOIN SERVICE s ON e.employee_id = s.employee_id
+GROUP BY e.employee_id;
+
+Explanation:
+This counts how many services each employee has done.
+
+13.
+INSERT INTO SERVICE (service_type, service_date, service_cost, customer_id, vehicle_id, employee_id, department_id)
+VALUES ('Invalid Service','2024-06-15',-100,1,1,4,5);
+
+Explanation:
+This won’t work because the service cost is negative, and the database doesn’t allow that.
+
+
