@@ -45,7 +45,7 @@ INSERT INTO EMPLOYEE (employee_id, first_name, last_name, emp_email, emp_phone, 
 
 
 -- Users
-INSERT INTO USER (user_id, username, password, employee_id, role_id) VALUES
+INSERT INTO `USER` (user_id, username, password, employee_id, role_id) VALUES
 (1, 'jcarter', 'hashed_pw_1', 1, 2),
 (2, 'mlopez', 'hashed_pw_2', 2, 2),
 (3, 'dkim', 'hashed_pw_3', 3, 2),
