@@ -170,3 +170,16 @@ INSERT INTO LOAN_PAYMENT (payment_date, amount, loan_id) VALUES
 ('2024-07-08',430,8),
 ('2024-07-09',500,9),
 ('2024-07-10',480,10);
+
+INSERT INTO ACCOUNTING_TRANSACTION (transaction_type, amount, transaction_date, department_id, payment_id) VALUES
+('Loan Payment',380,'2026-04-01',7,1),
+('Loan Payment',340,'2026-04-02',7,2),
+('Loan Payment',350,'2026-04-03',7,3),
+('Loan Payment',360,'2026-04-04',7,4),
+('Loan Payment',400,'2026-04-05',7,5),
+('Loan Payment',320,'2026-04-06',7,6),
+('Loan Payment',450,'2026-04-07',7,7),
+('Loan Payment',480,'2026-04-08',7,8),
+('Loan Payment',310,'2026-04-09',7,9),
+('Loan Payment',370,'2026-04-10',7,10);
+
