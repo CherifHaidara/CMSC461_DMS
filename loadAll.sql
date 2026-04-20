@@ -160,17 +160,18 @@ INSERT INTO LOAN (loan_amount, interest_rate, loan_term, monthly_payment, status
 (26000,5.9,60,480,'approved',10,10);
 
 INSERT INTO LOAN_PAYMENT (payment_date, amount, loan_id) VALUES
-('2024-07-01',380,1),
-('2024-07-02',420,2),
-('2024-07-03',560,3),
-('2024-07-04',650,4),
-('2024-07-05',900,5),
-('2024-07-06',770,6),
-('2024-07-07',400,7),
-('2024-07-08',430,8),
-('2024-07-09',500,9),
-('2024-07-10',480,10);
+('2026-04-01',380,1),
+('2026-04-02',340,2),
+('2026-04-03',350,3),
+('2026-04-04',360,4),
+('2026-04-05',400,5),
+('2026-04-06',320,6),
+('2026-04-07',450,7),
+('2026-04-08',480,8),
+('2026-04-09',310,9),
+('2026-04-10',370,10);
 
+-- Loan payments accounting
 INSERT INTO ACCOUNTING_TRANSACTION (transaction_type, amount, transaction_date, department_id, payment_id) VALUES
 ('Loan Payment',380,'2026-04-01',7,1),
 ('Loan Payment',340,'2026-04-02',7,2),
@@ -183,6 +184,7 @@ INSERT INTO ACCOUNTING_TRANSACTION (transaction_type, amount, transaction_date, 
 ('Loan Payment',310,'2026-04-09',7,9),
 ('Loan Payment',370,'2026-04-10',7,10);
 
+-- Vehicle Sales accounting
 INSERT INTO ACCOUNTING_TRANSACTION (transaction_type, amount, transaction_date, department_id, sale_id) VALUES
 ('Vehicle Sale',24000,'2024-01-01',1,1),
 ('Vehicle Sale',26000,'2024-01-05',1,2);
