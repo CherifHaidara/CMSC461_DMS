@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+<h2>Reports & Analytics</h2>
+
+<h3>Total Vehicles Sold</h3>
+<p>{{ total_sold }} vehicles sold</p>
+
+<h3>Sales by Department</h3>
+<table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse;">
+    <thead>
+        <tr><th>Department</th><th>Total Sales</th><th>Revenue</th></tr>
+    </thead>
+    <tbody>
+        {% for row in sales_by_dept %}
+        <tr>
+            <td>{{ row.department_name }}</td>
+            <td>{{ row.total_sales }}</td>
+            <td>${{ row.revenue }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3 style="margin-top:25px;">Service Summary</h3>
+<p>Total Services Performed: {{ service_stats.total_services }}</p>
+<p>Total Service Revenue: ${{ service_stats.service_revenue }}</p>
+
+<h3 style="margin-top:25px;">Loan Status Summary</h3>
+<table border="1" cellpadding="8" cellspacing="0" style="width:50%; border-collapse:collapse;">
+    <thead>
+        <tr><th>Status</th><th>Total</th></tr>
+    </thead>
+    <tbody>
+        {% for row in loan_summary %}
+        <tr>
+            <td>{{ row.status }}</td>
+            <td>{{ row.total }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3 style="margin-top:25px;">Outstanding Balances</h3>
+<table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse;">
+    <thead>
+        <tr><th>Customer</th><th>Loan Amount</th><th>Total Paid</th><th>Balance</th></tr>
+    </thead>
+    <tbody>
+        {% for row in balances %}
+        <tr>
+            <td>{{ row.customer_name }}</td>
+            <td>${{ row.loan_amount }}</td>
+            <td>${{ row.total_paid }}</td>
+            <td>${{ row.balance }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

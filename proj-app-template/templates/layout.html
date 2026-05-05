@@ -50,6 +50,9 @@
             {% if 'user_id' in session %}
                 <a href="/dashboard">Dashboard</a>
                 <a href="/directory">Directory</a>
+                <a href="{{ url_for('finance.loans') }}">Loans</a>
+                <a href="{{ url_for('finance.reports') }}">Reports</a>
+                <a href="{{ url_for('finance.search') }}">Search</a>
                 <a href="/logout">Logout</a>
             {% else %}
                 <a href="/">Login</a>

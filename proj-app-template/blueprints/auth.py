@@ -18,13 +18,15 @@ def login():
 
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM users WHERE username=%s", (username,))
+        cursor.execute("SELECT * FROM `USER` WHERE username=%s", (username,))
         user = cursor.fetchone()
         cursor.close()
         conn.close()
 
-        if user and check_password_hash(user['password'], password):
-            session['user_id'] = user['id']
+        if user and user['password'] == password:
+            session['user_id'] = user['user_id']
+            session['role_id'] = user['role_id']
+            session['employee_id'] = user['employee_id']
             return redirect(url_for('dashboard.dashboard'))
         else:
             flash("Invalid username or password. Please try again.", "error")
@@ -34,7 +36,7 @@ def login():
 
 @auth_bp.route('/logout')
 def logout():
-    session.pop('user_id', None)
+    session.clear()
     flash("You have been successfully logged out.", "success")
     return redirect(url_for('auth.login'))
 
