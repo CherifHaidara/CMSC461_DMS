@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+{% block title %}Loans{% endblock %}
+
+{% block content %}
+<h2>Loan Records</h2>
+<a href="{{ url_for('finance.create_loan') }}">+ New Loan</a>
+
+<table border="1" cellpadding="8" cellspacing="0" style="margin-top:15px; width:100%; border-collapse:collapse;">
+    <thead>
+        <tr>
+            <th>Loan ID</th>
+            <th>Customer</th>
+            <th>Vehicle</th>
+            <th>Amount</th>
+            <th>Interest Rate</th>
+            <th>Term (months)</th>
+            <th>Monthly Payment</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for loan in loans %}
+        <tr>
+            <td>{{ loan.loan_id }}</td>
+            <td>{{ loan.customer_name }}</td>
+            <td>{{ loan.vehicle_make }} {{ loan.vehicle_model }}</td>
+            <td>${{ loan.loan_amount }}</td>
+            <td>{{ loan.interest_rate }}%</td>
+            <td>{{ loan.loan_term }}</td>
+            <td>${{ loan.monthly_payment }}</td>
+            <td>{{ loan.status }}</td>
+            <td>
+                <a href="{{ url_for('finance.loan_detail', loan_id=loan.loan_id) }}">View</a> |
+                <a href="{{ url_for('finance.add_payment', loan_id=loan.loan_id) }}">Add Payment</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
