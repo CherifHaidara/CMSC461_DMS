@@ -1,0 +1,56 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Create user · Admin{% endblock %}
+
+{% block admin_content %}
+<div class="admin-form-header">
+    <h1>Create new user</h1>
+</div>
+
+<div class="admin-form-card">
+    <form method="POST" action="{{ url_for('admin.create_user') }}" class="form-stack">
+        <div class="form-group">
+            <label for="username">Username *</label>
+            <input type="text" id="username" name="username" required
+                   placeholder="Enter username (unique)" autocomplete="off">
+            <div class="form-help">Must be unique in the system</div>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password *</label>
+            <input type="password" id="password" name="password" required
+                   placeholder="Enter password" autocomplete="off">
+            <div class="form-help">Password will be securely hashed</div>
+        </div>
+
+        <div class="form-group">
+            <label for="employee_id">Employee *</label>
+            <select id="employee_id" name="employee_id" required>
+                <option value="">-- Select an employee --</option>
+                {% for employee in employees %}
+                    <option value="{{ employee.employee_id }}">
+                        {{ employee.full_name }} (ID: {{ employee.employee_id }})
+                    </option>
+                {% endfor %}
+            </select>
+            <div class="form-help">Employee linked to this account</div>
+        </div>
+
+        <div class="form-group">
+            <label for="role_id">Role *</label>
+            <select id="role_id" name="role_id" required>
+                <option value="">-- Select a role --</option>
+                {% for role in roles %}
+                    <option value="{{ role.role_id }}">{{ role.role_name }}</option>
+                {% endfor %}
+            </select>
+            <div class="form-help">User’s role in the system</div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">Create user</button>
+            <a href="{{ url_for('admin.view_users') }}" class="btn-cancel">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

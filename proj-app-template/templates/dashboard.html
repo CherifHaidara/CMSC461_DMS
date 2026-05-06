@@ -1,47 +1,25 @@
 {% extends "layout.html" %}
 
-{% block title %}Instructor List{% endblock %}
-
-{% block styles %}
-    .dashboard-container { 
-            padding: 20px; 
-            border: 1px solid #ccc; 
-            border-radius: 8px; 
-            max-width: 500px;
-        }
-        .session-info {
-            background-color: #e9ecef;
-            padding: 10px;
-            border-radius: 4px;
-            font-family: monospace;
-        }
-        .logout-btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 15px;
-            background-color: #dc3545;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-        }
-        .logout-btn:hover { background-color: #c82333; }
-{% endblock %}
+{% block title %}Dashboard{% endblock %}
 
 {% block content %}
-    <div class="dashboard-container">
-        <h1>Welcome to your Dashboard!</h1>
-        <p>You have successfully logged in.</p>
-        
-        <div class="session-info">
-            Active Session User ID: <strong>{{ user_id }}</strong>
-        </div>
-    <!--
-        (Fun fact: If you want to, you don't even have to 
-        pass user_id=session['user_id'] in your Python route.
-         Jinja2 templates have access to the session object 
-         by default, so you could also just write {{ session['user_id'] }} directly in your HTML!) 
-        -->
-        <p><a href="/directory">Instructors Directory</a>, using a Jinja2 inherited template</p>
-        <p><a href="/logout" class="logout-btn">Log Out</a></p>
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-subtitle">You are signed in and ready to work.</p>
     </div>
+</div>
+
+<div class="card card--padded card--measure-sm">
+    <div class="session-info">
+        Active session user ID: <strong>{{ user_id }}</strong>
+    </div>
+    <ul class="link-list">
+        <li><a href="{{ url_for('directory.directory') }}">Staff directory</a></li>
+        <li><a href="{{ url_for('finance.loans') }}">Loans</a></li>
+    </ul>
+    <div class="form-actions">
+        <a href="{{ url_for('auth.logout') }}" class="btn btn--danger btn--sm">Log out</a>
+    </div>
+</div>
 {% endblock %}

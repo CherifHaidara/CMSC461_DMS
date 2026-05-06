@@ -1,0 +1,70 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Divisions · Admin{% endblock %}
+
+{% block admin_content %}
+<div class="admin-header">
+    <h1>Divisions &amp; departments</h1>
+</div>
+
+{% if divisions %}
+    <div class="summary-stats">
+        <div class="stat-card">
+            <div class="stat-number">{{ divisions|length }}</div>
+            <div class="stat-label">Total divisions</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ divisions|map(attribute='dept_list')|map('length')|sum }}</div>
+            <div class="stat-label">Total departments</div>
+        </div>
+    </div>
+
+    {% for division in divisions %}
+        <div class="division-card">
+            <div class="division-header">
+                <h2>{{ division.division_name }}</h2>
+                <span class="division-id">Division ID: {{ division.division_id }}</span>
+            </div>
+
+            {% if division.description %}
+                <div class="division-description">
+                    {{ division.description }}
+                </div>
+            {% endif %}
+
+            <div class="departments-section">
+                <div class="departments-label">
+                    Departments ({{ division.dept_list|length }})
+                </div>
+
+                {% if division.dept_list %}
+                    {% for dept in division.dept_list %}
+                        <div class="department-item">
+                            <div class="department-name">{{ dept.department_name }}</div>
+                            {% if dept.description %}
+                                <div class="department-description">{{ dept.description }}</div>
+                            {% endif %}
+                            <div class="department-meta">
+                                <span class="dept-id">Dept ID: {{ dept.department_id }}</span>
+                                <span class="status-badge {% if dept.status == 'Active' %}status-active{% else %}status-inactive{% endif %}">
+                                    {{ dept.status }}
+                                </span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-departments">
+                        No departments assigned to this division.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="empty-state">
+        <p>No divisions found in the system.</p>
+    </div>
+{% endif %}
+
+<a href="{{ url_for('dashboard.dashboard') }}" class="back-link">← Back to dashboard</a>
+{% endblock %}

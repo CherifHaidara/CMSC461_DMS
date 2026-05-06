@@ -1,0 +1,18 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: cmsc461_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: car_dealership
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ../sql/dropDDL.sql:/docker-entrypoint-initdb.d/01-dropDDL.sql:ro
+      - ../sql/createDDL.sql:/docker-entrypoint-initdb.d/02-createDDL.sql:ro
+      - ../sql/loadAll.sql:/docker-entrypoint-initdb.d/03-loadAll.sql:ro
+
+volumes:
+  mysql_data:

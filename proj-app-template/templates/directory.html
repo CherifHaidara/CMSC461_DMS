@@ -1,25 +1,62 @@
 {% extends "layout.html" %}
 
-{% block title %}Instructor List{% endblock %}
-
-{% block styles %}
-    .instructor-list { line-height: 1.6; }
-{% endblock %}
+{% block title %}Staff directory{% endblock %}
 
 {% block content %}
-    <h2>Our Instructors</h2>
-    
-    <ul class="instructor-list">
-        {% for instructor in instructors %}
-            <li>
-                <strong>Name:</strong> {{ instructor[0] }} | 
-                <strong>Dept:</strong> {{ instructor[1] }}
-            </li>
-        {% else %}
-            <li>No instructors found (or there was an error connecting to the database).</li>
-        {% endfor %}
-    </ul>
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Staff directory</h1>
+        <p class="page-subtitle">All employees and their departments.</p>
+    </div>
+    <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn--secondary btn--sm">Back to dashboard</a>
+</div>
 
-    <br>
-    <a href="/dashboard">Back to Dashboard</a>
+<div class="table-wrap">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Employee name</th>
+                <th>Department</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in instructors %}
+                <tr>
+                    <td>{{ pagination.offset + loop.index }}</td>
+                    <td><strong>{{ row[0] }}</strong></td>
+                    <td>{{ row[1] }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3" class="text-muted">No employees found (or there was an error connecting to the database).</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if pagination.total_pages > 1 %}
+<nav class="pagination" aria-label="Directory pages">
+    {% if pagination.has_prev %}
+        <a class="page-link" href="{{ url_for('directory.directory', page=pagination.prev_page) }}">Prev</a>
+    {% else %}
+        <span class="page-link is-disabled">Prev</span>
+    {% endif %}
+
+    {% for p in range(1, pagination.total_pages + 1) %}
+        {% if p == pagination.page %}
+            <span class="page-link is-active">{{ p }}</span>
+        {% else %}
+            <a class="page-link" href="{{ url_for('directory.directory', page=p) }}">{{ p }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if pagination.has_next %}
+        <a class="page-link" href="{{ url_for('directory.directory', page=pagination.next_page) }}">Next</a>
+    {% else %}
+        <span class="page-link is-disabled">Next</span>
+    {% endif %}
+</nav>
+{% endif %}
 {% endblock %}

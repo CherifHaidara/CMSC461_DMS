@@ -1,4 +1,5 @@
 # auth.py
+import hmac
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from utils import get_db_connection
@@ -6,6 +7,14 @@ import mysql.connector
 
 # Define the blueprint
 auth_bp = Blueprint('auth', __name__)
+
+def _password_matches(stored: str, plain: str) -> bool:
+    """Werkzeug hashes from registration, or plain literals from loadAll.sql seed rows."""
+    if check_password_hash(stored, plain):
+        return True
+    if stored.startswith("pbkdf2:") or stored.startswith("scrypt:"):
+        return False
+    return hmac.compare_digest(stored, plain)
 
 @auth_bp.route('/', methods=['GET', 'POST'])
 def login():
@@ -23,10 +32,9 @@ def login():
         cursor.close()
         conn.close()
 
-        if user and user['password'] == password:
+        if user and _password_matches(user['password'], password):
             session['user_id'] = user['user_id']
-            session['role_id'] = user['role_id']
-            session['employee_id'] = user['employee_id']
+            session['user_role_id'] = user['role_id']
             return redirect(url_for('dashboard.dashboard'))
         else:
             flash("Invalid username or password. Please try again.", "error")
@@ -37,6 +45,8 @@ def login():
 @auth_bp.route('/logout')
 def logout():
     session.clear()
+    session.pop('user_id', None)
+    session.pop('user_role_id', None)
     flash("You have been successfully logged out.", "success")
     return redirect(url_for('auth.login'))
 
@@ -55,9 +65,10 @@ def register():
         
         try:
             # 2. Insert the new user into the MySQL database
+            # Demo FKs: tie new accounts to employee 10 / sales role (see loadAll.sql seeds).
             cursor.execute(
-                "INSERT INTO users (username, password) VALUES (%s, %s)",
-                (username, hashed_password)
+                "INSERT INTO `USER` (username, password, employee_id, role_id) VALUES (%s, %s, %s, %s)",
+                (username, hashed_password, 10, 2),
             )
             # 3. Commit the transaction (required to save INSERT/UPDATE/DELETE changes)
             conn.commit()
@@ -68,7 +79,8 @@ def register():
             
         except mysql.connector.IntegrityError:
             # This catches the error if the username already exists due to the UNIQUE constraint
-            return "That username is already taken. Please choose another."
+            flash("That username is already taken. Please choose another.", "error")
+            return render_template('register.html')
             
         finally:
             # Always close your connections, even if an error occurs

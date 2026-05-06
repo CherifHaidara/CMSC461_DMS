@@ -2,60 +2,128 @@
 {% block title %}Reports{% endblock %}
 
 {% block content %}
-<h2>Reports & Analytics</h2>
+<div class="admin-container">
+    <div class="admin-header">
+        <div>
+            <h1>Reports &amp; analytics</h1>
+            <p class="page-subtitle">Sales, service, and loan performance at a glance.</p>
+        </div>
+    </div>
 
-<h3>Total Vehicles Sold</h3>
-<p>{{ total_sold }} vehicles sold</p>
+    <div class="summary-stats">
+        <div class="stat-card">
+            <div class="stat-number">{{ total_sold }}</div>
+            <div class="stat-label">Vehicles sold</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ service_stats.total_services }}</div>
+            <div class="stat-label">Services performed</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">${{ service_stats.service_revenue or 0 }}</div>
+            <div class="stat-label">Service revenue</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">${{ balances|sum(attribute='balance') }}</div>
+            <div class="stat-label">Outstanding loan balance</div>
+        </div>
+    </div>
 
-<h3>Sales by Department</h3>
-<table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse;">
-    <thead>
-        <tr><th>Department</th><th>Total Sales</th><th>Revenue</th></tr>
-    </thead>
-    <tbody>
-        {% for row in sales_by_dept %}
-        <tr>
-            <td>{{ row.department_name }}</td>
-            <td>{{ row.total_sales }}</td>
-            <td>${{ row.revenue }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <div class="division-card">
+        <div class="division-header">
+            <h2>Sales by department</h2>
+            <span class="division-id">{{ sales_by_dept|length }} departments</span>
+        </div>
+        <div class="division-description">
+            Units sold and revenue rolled up by department.
+        </div>
+        <div class="departments-section">
+            <div class="departments-label">Departments</div>
+            {% if sales_by_dept %}
+                {% for row in sales_by_dept %}
+                    <div class="department-item">
+                        <div class="department-name">{{ row.department_name }}</div>
+                        <div class="department-meta">
+                            <span class="dept-id">{{ row.total_sales }} sales</span>
+                            <span class="status-badge status-active">${{ row.revenue }} revenue</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-departments">No sales data for any department.</div>
+            {% endif %}
+        </div>
+    </div>
 
-<h3 style="margin-top:25px;">Service Summary</h3>
-<p>Total Services Performed: {{ service_stats.total_services }}</p>
-<p>Total Service Revenue: ${{ service_stats.service_revenue }}</p>
+    <div class="division-card">
+        <div class="division-header">
+            <h2>Service operations</h2>
+        </div>
+        <div class="departments-section">
+            <div class="department-item">
+                <div class="department-name">Volume</div>
+                <div class="department-description">{{ service_stats.total_services }} total services recorded in the system.</div>
+            </div>
+            <div class="department-item">
+                <div class="department-name">Revenue</div>
+                <div class="department-description">Lifetime service revenue: <strong>${{ service_stats.service_revenue or 0 }}</strong>.</div>
+            </div>
+        </div>
+    </div>
 
-<h3 style="margin-top:25px;">Loan Status Summary</h3>
-<table border="1" cellpadding="8" cellspacing="0" style="width:50%; border-collapse:collapse;">
-    <thead>
-        <tr><th>Status</th><th>Total</th></tr>
-    </thead>
-    <tbody>
-        {% for row in loan_summary %}
-        <tr>
-            <td>{{ row.status }}</td>
-            <td>{{ row.total }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <div class="division-card">
+        <div class="division-header">
+            <h2>Loan portfolio</h2>
+            <span class="division-id">{{ loan_summary|length }} statuses</span>
+        </div>
+        <div class="division-description">
+            Count of loans grouped by status.
+        </div>
+        <div class="departments-section">
+            <div class="departments-label">Status breakdown</div>
+            {% if loan_summary %}
+                {% for row in loan_summary %}
+                    <div class="department-item">
+                        <div class="department-name">{{ row.status }}</div>
+                        <div class="department-meta">
+                            <span class="dept-id">Loan count</span>
+                            <span class="division-id">{{ row.total }} loans</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-departments">No loan records.</div>
+            {% endif %}
+        </div>
+    </div>
 
-<h3 style="margin-top:25px;">Outstanding Balances</h3>
-<table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse;">
-    <thead>
-        <tr><th>Customer</th><th>Loan Amount</th><th>Total Paid</th><th>Balance</th></tr>
-    </thead>
-    <tbody>
-        {% for row in balances %}
-        <tr>
-            <td>{{ row.customer_name }}</td>
-            <td>${{ row.loan_amount }}</td>
-            <td>${{ row.total_paid }}</td>
-            <td>${{ row.balance }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <div class="division-card">
+        <div class="division-header">
+            <h2>Outstanding balances</h2>
+            <span class="division-id">{{ balances|length }} loans</span>
+        </div>
+        <div class="division-description">
+            Principal remaining per customer after payments.
+        </div>
+        <div class="departments-section">
+            <div class="departments-label">Customers</div>
+            {% if balances %}
+                {% for row in balances %}
+                    <div class="department-item">
+                        <div class="department-name">{{ row.customer_name }}</div>
+                        <div class="department-description">
+                            Loan ${{ row.loan_amount }} · Paid ${{ row.total_paid }}
+                        </div>
+                        <div class="department-meta">
+                            <span class="dept-id">Balance due</span>
+                            <span class="division-id">${{ row.balance }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-departments">No balance data.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

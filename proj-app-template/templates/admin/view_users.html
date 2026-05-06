@@ -1,0 +1,79 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Users · Admin{% endblock %}
+
+{% block admin_content %}
+<div class="admin-header">
+    <h1>Manage users</h1>
+    <a href="{{ url_for('admin.create_user') }}" class="admin-btn">+ Create new user</a>
+</div>
+
+{% if users %}
+    <table class="users-table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Employee name</th>
+                <th>Employee ID</th>
+                <th>Role</th>
+                <th>User ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td><strong>{{ user.username }}</strong></td>
+                    <td>{{ user.first_name }} {{ user.last_name }}</td>
+                    <td>{{ user.employee_id }}</td>
+                    <td>
+                        {% if user.role_id == 1 %}
+                            <span class="role-badge role-admin">{{ user.role_name }}</span>
+                        {% elif user.role_id == 2 %}
+                            <span class="role-badge role-sales">{{ user.role_name }}</span>
+                        {% elif user.role_id == 3 %}
+                            <span class="role-badge role-service">{{ user.role_name }}</span>
+                        {% elif user.role_id == 4 %}
+                            <span class="role-badge role-finance">{{ user.role_name }}</span>
+                        {% elif user.role_id == 5 %}
+                            <span class="role-badge role-accountant">{{ user.role_name }}</span>
+                        {% else %}
+                            <span class="role-badge">{{ user.role_name }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ user.user_id }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="no-users">
+        <p>No users found in the system.</p>
+    </div>
+{% endif %}
+
+{% if pagination.total_pages > 1 %}
+<nav class="pagination" aria-label="Users pages">
+    {% if pagination.has_prev %}
+        <a class="page-link" href="{{ url_for('admin.view_users', page=pagination.prev_page) }}">Prev</a>
+    {% else %}
+        <span class="page-link is-disabled">Prev</span>
+    {% endif %}
+
+    {% for p in range(1, pagination.total_pages + 1) %}
+        {% if p == pagination.page %}
+            <span class="page-link is-active">{{ p }}</span>
+        {% else %}
+            <a class="page-link" href="{{ url_for('admin.view_users', page=p) }}">{{ p }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if pagination.has_next %}
+        <a class="page-link" href="{{ url_for('admin.view_users', page=pagination.next_page) }}">Next</a>
+    {% else %}
+        <span class="page-link is-disabled">Next</span>
+    {% endif %}
+</nav>
+{% endif %}
+
+<a href="{{ url_for('dashboard.dashboard') }}" class="back-link">← Back to dashboard</a>
+{% endblock %}
