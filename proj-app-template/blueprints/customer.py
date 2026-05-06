@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template
-From Utils import get_db_connection, login_required
+from flask import Blueprint, render_template, flash
+import mysql.connector
+from utils import get_db_connection, login_required
 
 customer_bp = Blueprint('customer', __name__)
 
@@ -8,16 +9,28 @@ customer_bp = Blueprint('customer', __name__)
 
 def customer();
 
-  conn = get_db_connection()
-  cursor = conn.cursor()
+  customers_data = []
 
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
 
-  query = "SELECT * FROM CUSTOMER" 
-  cursor.execute(query)
+        query = "SELECT * FROM CUSTOMER"
+        cursor.execute(query)
 
-  customers = cursor.fetchall()
+        customers_data = cursor.fetchall()
 
-  cursor.close()
-  conn.close()
+    except mysql.connector.Error as err:
+        flash(f"MySQL Error: {err}", "error")
 
-  return render_template('customers.html', customers=customers)
+    finally:
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
+
+        if 'conn' in locals() and conn is not None and conn.is_connected():
+            conn.close()
+
+    return render_template(
+        'customers.html',
+        customers=customers_data
+    )
