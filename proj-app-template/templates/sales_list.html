@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block title %}Sales{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Sales</h1>
+        <p class="page-subtitle">All completed vehicle sales transactions.</p>
+    </div>
+    <div style="display:flex;gap:.5rem;">
+        <a href="{{ url_for('sales.create_sale') }}" class="btn btn--primary btn--sm">+ New Sale</a>
+        <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn--secondary btn--sm">Dashboard</a>
+    </div>
+</div>
+
+<div class="table-wrap">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Vehicle</th>
+                <th>Department</th>
+                <th>Employee</th>
+                <th>Financing</th>
+                <th>Payment</th>
+                <th>Price</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in sales %}
+            <tr>
+                <td>{{ pagination.offset + loop.index }}</td>
+                <td>{{ s.sale_date }}</td>
+                <td><strong>{{ s.customer_name }}</strong></td>
+                <td>{{ s.vehicle }}</td>
+                <td>{{ s.department_name }}</td>
+                <td>{{ s.employee_name }}</td>
+                <td>{{ s.financing_option }}</td>
+                <td>{{ s.payment_method }}</td>
+                <td>${{ "%.2f"|format(s.sale_price) }}</td>
+                <td><a href="{{ url_for('sales.sale_detail', sale_id=s.sale_id) }}" class="btn btn--secondary btn--sm">View</a></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="10" class="text-muted">No sales records found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if pagination.total_pages > 1 %}
+<nav class="pagination" aria-label="Sales pages">
+    {% if pagination.has_prev %}
+        <a class="page-link" href="{{ url_for('sales.sales_list', page=pagination.prev_page) }}">Prev</a>
+    {% else %}
+        <span class="page-link is-disabled">Prev</span>
+    {% endif %}
+
+    {% for p in range(1, pagination.total_pages + 1) %}
+        {% if p == pagination.page %}
+            <span class="page-link is-active">{{ p }}</span>
+        {% else %}
+            <a class="page-link" href="{{ url_for('sales.sales_list', page=p) }}">{{ p }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if pagination.has_next %}
+        <a class="page-link" href="{{ url_for('sales.sales_list', page=pagination.next_page) }}">Next</a>
+    {% else %}
+        <span class="page-link is-disabled">Next</span>
+    {% endif %}
+</nav>
+{% endif %}
+{% endblock %}

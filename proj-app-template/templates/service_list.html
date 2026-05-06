@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+
+{% block title %}Service Records{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Service Records</h1>
+        <p class="page-subtitle">All vehicle service and maintenance records.</p>
+    </div>
+    <div style="display:flex;gap:.5rem;">
+        <a href="{{ url_for('service.create_service') }}" class="btn btn--primary btn--sm">+ New Service</a>
+        <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn--secondary btn--sm">Dashboard</a>
+    </div>
+</div>
+
+<div class="table-wrap">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Service Type</th>
+                <th>Customer</th>
+                <th>Vehicle</th>
+                <th>Technician</th>
+                <th>Cost</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sv in services %}
+            <tr>
+                <td>{{ pagination.offset + loop.index }}</td>
+                <td>{{ sv.service_date }}</td>
+                <td><strong>{{ sv.service_type }}</strong></td>
+                <td>{{ sv.customer_name }}</td>
+                <td>{{ sv.vehicle }}</td>
+                <td>{{ sv.technician }}</td>
+                <td>${{ "%.2f"|format(sv.service_cost) }}</td>
+                <td><a href="{{ url_for('service.service_detail', service_id=sv.service_id) }}" class="btn btn--secondary btn--sm">View</a></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="8" class="text-muted">No service records found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if pagination.total_pages > 1 %}
+<nav class="pagination" aria-label="Service pages">
+    {% if pagination.has_prev %}
+        <a class="page-link" href="{{ url_for('service.service_list', page=pagination.prev_page) }}">Prev</a>
+    {% else %}
+        <span class="page-link is-disabled">Prev</span>
+    {% endif %}
+
+    {% for p in range(1, pagination.total_pages + 1) %}
+        {% if p == pagination.page %}
+            <span class="page-link is-active">{{ p }}</span>
+        {% else %}
+            <a class="page-link" href="{{ url_for('service.service_list', page=p) }}">{{ p }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if pagination.has_next %}
+        <a class="page-link" href="{{ url_for('service.service_list', page=pagination.next_page) }}">Next</a>
+    {% else %}
+        <span class="page-link is-disabled">Next</span>
+    {% endif %}
+</nav>
+{% endif %}
+{% endblock %}
