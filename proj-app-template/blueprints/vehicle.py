@@ -1,23 +1,34 @@
 from flask import Blueprint, render_template
-From Utils import get_db_connection, login_required
+import mysql.connector
+from utils import get_db_connection, login_required
 
-customer_bp = Blueprint('vehicle', __name__)
+vehicle_bp = Blueprint('vehicle', __name__)
 
-@customer_bp.route('/vehicles')
+@vehicle_bp.route('/vehicles')
 @login required
 
 def vehicles();
 
-  conn = get_db_connection()
-  cursor = conn.cursor()
+  vehicles_data = []
 
+  try:
+    conn = get_db_connection()
+    cursor = conn.cursor()
 
-  query = "SELECT * FROM VEHICLE" 
-  cursor.execute(query)
+    query = "SELECT * FROM VEHICLE" 
+    cursor.execute(query)
 
-  customers = cursor.fetchall()
+  except mysql.connector.Error as err:
+    flash(f"MySQL Error: {err}", "error")
+    
+   finally:
+        if 'cursor' in locals() and cursor is not None:
+            cursor.close()
 
-  cursor.close()
-  conn.close()
+        if 'conn' in locals() and conn is not None and conn.is_connected():
+            conn.close()
 
-  return render_template('customers.html', vehicles=vehicles)
+    return render_template(
+        'vehicles.html',
+        vehicles=vehicles_data
+    )
