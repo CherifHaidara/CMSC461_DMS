@@ -54,5 +54,24 @@
         </div>
     </main>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.collapsible-trigger').forEach(function (trigger) {
+                trigger.addEventListener('click', function () {
+                    var card = trigger.closest('.collapsible-card');
+                    if (!card) return;
+                    var collapsed = card.classList.toggle('collapsed');
+                    trigger.setAttribute('aria-expanded', !collapsed);
+                });
+
+                trigger.addEventListener('keydown', function (event) {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        trigger.click();
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

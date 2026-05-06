@@ -1,0 +1,75 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Edit user · Admin{% endblock %}
+
+{% block admin_content %}
+<div class="admin-form-header">
+    <h1>Edit user account</h1>
+</div>
+
+<div class="admin-form-card">
+    <form method="POST" action="{{ url_for('admin.edit_user', user_id=user.user_id) }}" class="form-grid">
+        <div class="form-group">
+            <label for="username">Username *</label>
+            <input type="text" id="username" name="username" required value="{{ user.username }}" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" autocomplete="off">
+            <div class="form-help">Leave blank to keep the current password.</div>
+        </div>
+        <div class="form-group">
+            <label for="first_name">First Name *</label>
+            <input type="text" id="first_name" name="first_name" required value="{{ user.first_name }}">
+        </div>
+        <div class="form-group">
+            <label for="last_name">Last Name *</label>
+            <input type="text" id="last_name" name="last_name" required value="{{ user.last_name }}">
+        </div>
+        <div class="form-group">
+            <label for="emp_email">Email *</label>
+            <input type="email" id="emp_email" name="emp_email" required value="{{ user.emp_email }}">
+        </div>
+        <div class="form-group">
+            <label for="emp_phone">Phone *</label>
+            <input type="tel" id="emp_phone" name="emp_phone" required value="{{ user.emp_phone }}">
+        </div>
+        <div class="form-group">
+            <label for="department_id">Department *</label>
+            <select id="department_id" name="department_id" required>
+                <option value="">Select Department</option>
+                {% for dept in departments %}
+                <option value="{{ dept.department_id }}" {% if dept.department_id == user.department_id %}selected{% endif %}>{{ dept.department_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="role_id">Role *</label>
+            <select id="role_id" name="role_id" required>
+                <option value="">Select Role</option>
+                {% for role in roles %}
+                <option value="{{ role.role_id }}" {% if role.role_id == user.role_id %}selected{% endif %}>{{ role.role_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-actions form-actions--full">
+            <button type="submit" class="btn-submit">Save changes</button>
+            <a href="{{ url_for('admin.view_users') }}" class="btn-cancel">Cancel</a>
+        </div>
+    </form>
+
+    {% if user.status == 'Active' and user.user_id != session.user_id %}
+        <div class="form-actions form-actions-secondary">
+            <form method="POST" action="{{ url_for('admin.deactivate_user', user_id=user.user_id) }}" onsubmit="return confirm('Deactivate this user account?');">
+                <button type="submit" class="btn btn-danger">Deactivate user</button>
+            </form>
+        </div>
+    {% elif user.status == 'Inactive' %}
+        <div class="form-actions form-actions-secondary">
+            <form method="POST" action="{{ url_for('admin.activate_user', user_id=user.user_id) }}">
+                <button type="submit" class="btn btn-success">Reactivate user</button>
+            </form>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

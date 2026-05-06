@@ -23,7 +23,7 @@ def loans():
         FROM LOAN l
         JOIN Customer c ON l.customer_id = c.customer_id
         JOIN Vehicle v ON l.vehicle_id = v.vehicle_id
-        ORDER BY l.loan_id DESC
+        ORDER BY l.loan_id ASC
         LIMIT %s OFFSET %s
         """,
         (pagination["per_page"], pagination["offset"]),

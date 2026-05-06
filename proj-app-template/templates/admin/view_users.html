@@ -12,19 +12,20 @@
     <table class="users-table">
         <thead>
             <tr>
+                <th>Employee ID</th>
                 <th>Username</th>
                 <th>Employee name</th>
-                <th>Employee ID</th>
                 <th>Role</th>
-                <th>User ID</th>
+                <th>Status</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for user in users %}
                 <tr>
+                    <td>{{ user.employee_id }}</td>
                     <td><strong>{{ user.username }}</strong></td>
                     <td>{{ user.first_name }} {{ user.last_name }}</td>
-                    <td>{{ user.employee_id }}</td>
                     <td>
                         {% if user.role_id == 1 %}
                             <span class="role-badge role-admin">{{ user.role_name }}</span>
@@ -40,7 +41,14 @@
                             <span class="role-badge">{{ user.role_name }}</span>
                         {% endif %}
                     </td>
-                    <td>{{ user.user_id }}</td>
+                    <td>
+                        <span class="status-badge {% if user.status == 'Active' %}status-active{% else %}status-inactive{% endif %}">
+                            {{ user.status or 'Active' }}
+                        </span>
+                    </td>
+                    <td class="table-actions">
+                        <a href="{{ url_for('admin.edit_user', user_id=user.user_id) }}" class="btn btn-small">Edit</a>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
