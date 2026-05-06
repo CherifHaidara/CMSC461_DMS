@@ -15,10 +15,16 @@
             <nav class="nav-links" aria-label="Main">
                 {% if 'user_id' in session %}
                     <a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
-                    <a href="{{ url_for('directory.directory') }}">Directory</a>
-                    <a href="{{ url_for('finance.loans') }}">Loans</a>
-                    <a href="{{ url_for('finance.reports') }}">Reports</a>
                     <a href="{{ url_for('finance.search') }}">Search</a>
+                    {% if session.get('user_role_id') in [1, 4] %}
+                        <a href="{{ url_for('finance.loans') }}">Loans</a>
+                    {% endif %}
+                    {% if session.get('user_role_id') in [1, 4, 5] %}
+                        <a href="{{ url_for('finance.reports') }}">Reports</a>
+                    {% endif %}
+                    {% if session.get('user_role_id') in [1, 2] %}
+                        <a href="{{ url_for('directory.directory') }}">Directory</a>
+                    {% endif %}
                     {% if session.get('user_role_id') == 1 %}
                         <a href="{{ url_for('admin.admin_home') }}" class="{% if request.path.startswith('/admin') %}is-nav-active{% endif %}">Admin</a>
                     {% endif %}

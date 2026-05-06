@@ -1,11 +1,11 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from utils import get_db_connection, login_required, build_pagination
+from utils import get_db_connection, login_required, role_required, build_pagination
 
 finance_bp = Blueprint('finance', __name__)
 
 
 @finance_bp.route('/loans')
-@login_required
+@role_required(1, 4)
 def loans():
     per_page = 10
     page = request.args.get('page', 1, type=int)
@@ -35,7 +35,7 @@ def loans():
 
 
 @finance_bp.route('/loans/create', methods=['GET', 'POST'])
-@login_required
+@role_required(1, 4)
 def create_loan():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
@@ -68,7 +68,7 @@ def create_loan():
 
 
 @finance_bp.route('/loans/<int:loan_id>')
-@login_required
+@role_required(1, 4)
 def loan_detail(loan_id):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
@@ -89,7 +89,7 @@ def loan_detail(loan_id):
 
 
 @finance_bp.route('/loans/<int:loan_id>/payment', methods=['GET', 'POST'])
-@login_required
+@role_required(1, 4)
 def add_payment(loan_id):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
@@ -115,7 +115,7 @@ def add_payment(loan_id):
 
 
 @finance_bp.route('/reports')
-@login_required
+@role_required(1, 4, 5)
 def reports():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
