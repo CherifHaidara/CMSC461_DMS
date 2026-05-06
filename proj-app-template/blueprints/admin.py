@@ -2,19 +2,32 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash
 import mysql.connector
-from utils import get_db_connection, admin_required
+from utils import get_db_connection, admin_required, build_pagination
 
 # Define the blueprint
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
+
+
+@admin_bp.route('/')
+@admin_required
+def admin_home():
+    return redirect(url_for('admin.view_users'))
+
 
 @admin_bp.route('/users')
 @admin_required
 def view_users():
     """Display all users in the system."""
+    per_page = 10
+    page = request.args.get('page', 1, type=int)
     users_data = []
+    total_items = 0
     try:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT COUNT(*) AS cnt FROM `USER`")
+        total_items = cursor.fetchone()["cnt"]
+        pagination = build_pagination(page=page, total_items=total_items, per_page=per_page)
         cursor.execute(
             """
             SELECT u.user_id, u.username, u.employee_id, e.first_name, e.last_name, 
@@ -23,18 +36,27 @@ def view_users():
             JOIN EMPLOYEE e ON u.employee_id = e.employee_id
             JOIN ROLE r ON u.role_id = r.role_id
             ORDER BY u.username
+            LIMIT %s OFFSET %s
             """
+            ,
+            (pagination["per_page"], pagination["offset"]),
         )
         users_data = cursor.fetchall()
     except mysql.connector.Error as err:
         flash(f"MySQL Error: {err}", "error")
+        pagination = build_pagination(page=1, total_items=0, per_page=per_page)
     finally:
         if 'cursor' in locals() and cursor is not None:
             cursor.close()
         if 'conn' in locals() and conn is not None and conn.is_connected():
             conn.close()
 
-    return render_template('admin/view_users.html', users=users_data)
+    return render_template(
+        'admin/view_users.html',
+        users=users_data,
+        admin_tab='users',
+        pagination=pagination,
+    )
 
 
 @admin_bp.route('/users/create', methods=['GET', 'POST'])
@@ -79,7 +101,12 @@ def create_user():
         # Validate input
         if not username or not password or not employee_id or not role_id:
             flash("All fields are required.", "error")
-            return render_template('admin/create_user.html', employees=employees_data, roles=roles_data)
+            return render_template(
+                'admin/create_user.html',
+                employees=employees_data,
+                roles=roles_data,
+                admin_tab='users',
+            )
 
         try:
             # Hash password
@@ -111,7 +138,12 @@ def create_user():
             if 'conn' in locals() and conn is not None and conn.is_connected():
                 conn.close()
 
-    return render_template('admin/create_user.html', employees=employees_data, roles=roles_data)
+    return render_template(
+        'admin/create_user.html',
+        employees=employees_data,
+        roles=roles_data,
+        admin_tab='users',
+    )
 
 
 @admin_bp.route('/divisions')
@@ -164,4 +196,4 @@ def view_divisions():
         if 'conn' in locals() and conn is not None and conn.is_connected():
             conn.close()
 
-    return render_template('admin/view_divisions.html', divisions=divisions_data)
+    return render_template('admin/view_divisions.html', divisions=divisions_data, admin_tab='divisions')

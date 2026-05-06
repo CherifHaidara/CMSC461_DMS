@@ -2,43 +2,60 @@
 {% block title %}Search{% endblock %}
 
 {% block content %}
-<h2>Search</h2>
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Search</h1>
+        <p class="page-subtitle">Find customers, vehicles, sales, loans, and service records.</p>
+    </div>
+</div>
 
-<form method="GET" action="{{ url_for('finance.search') }}">
-    <input type="text" name="q" value="{{ query }}" placeholder="Search..." required>
-    <select name="type">
-        <option value="customer" {% if filter_type == 'customer' %}selected{% endif %}>Customer</option>
-        <option value="vehicle" {% if filter_type == 'vehicle' %}selected{% endif %}>Vehicle</option>
-        <option value="sale" {% if filter_type == 'sale' %}selected{% endif %}>Sale</option>
-        <option value="loan" {% if filter_type == 'loan' %}selected{% endif %}>Loan</option>
-        <option value="service" {% if filter_type == 'service' %}selected{% endif %}>Service</option>
-    </select>
-    <button type="submit">Search</button>
+<form method="GET" action="{{ url_for('finance.search') }}" class="form-card form-card--narrow">
+    <div class="inline-fields">
+        <div class="form-group">
+            <label for="q">Query</label>
+            <input type="text" id="q" name="q" value="{{ query }}" placeholder="Search…" required>
+        </div>
+        <div class="form-group">
+            <label for="type">Type</label>
+            <select id="type" name="type">
+                <option value="customer" {% if filter_type == 'customer' %}selected{% endif %}>Customer</option>
+                <option value="vehicle" {% if filter_type == 'vehicle' %}selected{% endif %}>Vehicle</option>
+                <option value="sale" {% if filter_type == 'sale' %}selected{% endif %}>Sale</option>
+                <option value="loan" {% if filter_type == 'loan' %}selected{% endif %}>Loan</option>
+                <option value="service" {% if filter_type == 'service' %}selected{% endif %}>Service</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn btn--primary">Search</button>
+    </div>
 </form>
 
 {% if query %}
-<h3 style="margin-top:20px;">Results for "{{ query }}" in {{ filter_type }}</h3>
+<h3>Results for “{{ query }}” ({{ filter_type }})</h3>
 {% if results %}
-<table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse; margin-top:10px;">
-    <thead>
-        <tr>
-            {% for key in results[0].keys() %}
-            <th>{{ key }}</th>
+<div class="table-wrap">
+    <table class="data-table">
+        <thead>
+            <tr>
+                {% for key in results[0].keys() %}
+                <th>{{ key }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in results %}
+            <tr>
+                {% for value in row.values() %}
+                <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
             {% endfor %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for row in results %}
-        <tr>
-            {% for value in row.values() %}
-            <td>{{ value }}</td>
-            {% endfor %}
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
 {% else %}
-<p>No results found.</p>
+<p class="text-muted">No results found.</p>
 {% endif %}
 {% endif %}
 {% endblock %}

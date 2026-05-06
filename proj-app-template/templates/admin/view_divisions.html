@@ -1,216 +1,70 @@
-{% extends "layout.html" %}
+{% extends "admin/base_admin.html" %}
 
-{% block title %}View Divisions & Departments - Admin{% endblock %}
+{% block title %}Divisions · Admin{% endblock %}
 
-{% block styles %}
-    .admin-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-    .admin-header {
-        margin-bottom: 30px;
-        border-bottom: 2px solid #333;
-        padding-bottom: 15px;
-    }
-    .admin-header h1 {
-        margin: 0;
-        color: #333;
-    }
-    .division-card {
-        background-color: #f9f9f9;
-        border: 2px solid #333;
-        border-radius: 8px;
-        padding: 20px;
-        margin-bottom: 25px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    .division-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #ddd;
-    }
-    .division-header h2 {
-        margin: 0;
-        color: #333;
-        font-size: 22px;
-    }
-    .division-id {
-        font-size: 12px;
-        color: #666;
-        background-color: #e9ecef;
-        padding: 3px 8px;
-        border-radius: 3px;
-    }
-    .division-description {
-        color: #666;
-        margin: 10px 0 15px 0;
-        font-size: 14px;
-        font-style: italic;
-    }
-    .departments-section {
-        margin-top: 15px;
-    }
-    .departments-label {
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 10px;
-        font-size: 14px;
-    }
-    .department-item {
-        background-color: white;
-        border-left: 4px solid #007bff;
-        padding: 12px;
-        margin-bottom: 10px;
-        border-radius: 3px;
-    }
-    .department-name {
-        font-weight: bold;
-        color: #007bff;
-        font-size: 16px;
-    }
-    .department-description {
-        color: #666;
-        margin: 5px 0;
-        font-size: 13px;
-    }
-    .department-meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 8px;
-        font-size: 12px;
-    }
-    .dept-id {
-        color: #999;
-    }
-    .status-badge {
-        display: inline-block;
-        padding: 4px 8px;
-        border-radius: 3px;
-        font-size: 11px;
-        font-weight: bold;
-    }
-    .status-active {
-        background-color: #d4edda;
-        color: #155724;
-    }
-    .status-inactive {
-        background-color: #f8d7da;
-        color: #721c24;
-    }
-    .no-departments {
-        color: #999;
-        font-style: italic;
-        padding: 10px;
-        background-color: #f5f5f5;
-        border-radius: 3px;
-    }
-    .back-link {
-        display: inline-block;
-        margin-top: 20px;
-        padding: 8px 15px;
-        background-color: #6c757d;
-        color: white;
-        text-decoration: none;
-        border-radius: 4px;
-    }
-    .back-link:hover {
-        background-color: #5a6268;
-    }
-    .summary-stats {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 15px;
-        margin-bottom: 30px;
-    }
-    .stat-card {
-        background-color: #e3f2fd;
-        border: 1px solid #2196f3;
-        border-radius: 8px;
-        padding: 15px;
-        text-align: center;
-    }
-    .stat-number {
-        font-size: 28px;
-        font-weight: bold;
-        color: #1976d2;
-    }
-    .stat-label {
-        color: #666;
-        font-size: 13px;
-        margin-top: 5px;
-    }
-{% endblock %}
+{% block admin_content %}
+<div class="admin-header">
+    <h1>Divisions &amp; departments</h1>
+</div>
 
-{% block content %}
-    <div class="admin-container">
-        <div class="admin-header">
-            <h1>Divisions & Departments</h1>
+{% if divisions %}
+    <div class="summary-stats">
+        <div class="stat-card">
+            <div class="stat-number">{{ divisions|length }}</div>
+            <div class="stat-label">Total divisions</div>
         </div>
-
-        {% if divisions %}
-            <div class="summary-stats">
-                <div class="stat-card">
-                    <div class="stat-number">{{ divisions|length }}</div>
-                    <div class="stat-label">Total Divisions</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">{{ divisions|map(attribute='dept_list')|map('length')|sum }}</div>
-                    <div class="stat-label">Total Departments</div>
-                </div>
-            </div>
-
-            {% for division in divisions %}
-                <div class="division-card">
-                    <div class="division-header">
-                        <h2>{{ division.division_name }}</h2>
-                        <span class="division-id">Division ID: {{ division.division_id }}</span>
-                    </div>
-                    
-                    {% if division.description %}
-                        <div class="division-description">
-                            {{ division.description }}
-                        </div>
-                    {% endif %}
-
-                    <div class="departments-section">
-                        <div class="departments-label">
-                            Departments ({{ division.dept_list|length }})
-                        </div>
-                        
-                        {% if division.dept_list %}
-                            {% for dept in division.dept_list %}
-                                <div class="department-item">
-                                    <div class="department-name">{{ dept.department_name }}</div>
-                                    {% if dept.description %}
-                                        <div class="department-description">{{ dept.description }}</div>
-                                    {% endif %}
-                                    <div class="department-meta">
-                                        <span class="dept-id">Dept ID: {{ dept.department_id }}</span>
-                                        <span class="status-badge {% if dept.status == 'Active' %}status-active{% else %}status-inactive{% endif %}">
-                                            {{ dept.status }}
-                                        </span>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            <div class="no-departments">
-                                No departments assigned to this division.
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <div style="text-align: center; padding: 40px; color: #666; font-size: 18px;">
-                <p>No divisions found in the system.</p>
-            </div>
-        {% endif %}
-
-        <a href="{{ url_for('dashboard.dashboard') }}" class="back-link">← Back to Dashboard</a>
+        <div class="stat-card">
+            <div class="stat-number">{{ divisions|map(attribute='dept_list')|map('length')|sum }}</div>
+            <div class="stat-label">Total departments</div>
+        </div>
     </div>
+
+    {% for division in divisions %}
+        <div class="division-card">
+            <div class="division-header">
+                <h2>{{ division.division_name }}</h2>
+                <span class="division-id">Division ID: {{ division.division_id }}</span>
+            </div>
+
+            {% if division.description %}
+                <div class="division-description">
+                    {{ division.description }}
+                </div>
+            {% endif %}
+
+            <div class="departments-section">
+                <div class="departments-label">
+                    Departments ({{ division.dept_list|length }})
+                </div>
+
+                {% if division.dept_list %}
+                    {% for dept in division.dept_list %}
+                        <div class="department-item">
+                            <div class="department-name">{{ dept.department_name }}</div>
+                            {% if dept.description %}
+                                <div class="department-description">{{ dept.description }}</div>
+                            {% endif %}
+                            <div class="department-meta">
+                                <span class="dept-id">Dept ID: {{ dept.department_id }}</span>
+                                <span class="status-badge {% if dept.status == 'Active' %}status-active{% else %}status-inactive{% endif %}">
+                                    {{ dept.status }}
+                                </span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-departments">
+                        No departments assigned to this division.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="empty-state">
+        <p>No divisions found in the system.</p>
+    </div>
+{% endif %}
+
+<a href="{{ url_for('dashboard.dashboard') }}" class="back-link">← Back to dashboard</a>
 {% endblock %}

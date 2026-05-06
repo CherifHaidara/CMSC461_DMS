@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="admin-container">
+    <nav class="admin-tabs" aria-label="Admin sections">
+        <a href="{{ url_for('admin.view_users') }}" class="admin-tab {% if admin_tab == 'users' %}is-active{% endif %}">Users</a>
+        <a href="{{ url_for('admin.view_divisions') }}" class="admin-tab {% if admin_tab == 'divisions' %}is-active{% endif %}">Divisions</a>
+    </nav>
+    {% block admin_content %}{% endblock %}
+</div>
+{% endblock %}

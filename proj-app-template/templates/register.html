@@ -1,23 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Register Page</title>
-</head>
-<body>
-    <h2>Register a New Account</h2>
-    
-    <form method="POST" action="/register">
-        <label for="username">Choose a Username:</label>
-        <input type="text" id="username" name="username" required><br><br>
-        
-        <label for="password">Choose a Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        
-        <input type="submit" value="Register">
+{% extends "layout.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block body_class %}page-auth{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+    <h1>Create account</h1>
+    <p class="text-muted">Choose a username and password for DMS access.</p>
+
+    <form method="POST" action="{{ url_for('auth.register') }}" class="form-stack">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required autocomplete="username">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required autocomplete="new-password">
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn--primary btn--block">Register</button>
+        </div>
     </form>
-    
-    <br>
-    <a href="/">Already have an account? Go to Login</a>
-</body>
-</html>
+
+    <div class="auth-footer">
+        <a href="{{ url_for('auth.login') }}">Already have an account? Sign in</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from utils import get_db_connection, login_required
+from utils import get_db_connection, login_required, build_pagination
 
 finance_bp = Blueprint('finance', __name__)
 
@@ -7,18 +7,31 @@ finance_bp = Blueprint('finance', __name__)
 @finance_bp.route('/loans')
 @login_required
 def loans():
+    per_page = 10
+    page = request.args.get('page', 1, type=int)
+
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("""
+
+    cursor.execute("SELECT COUNT(*) AS cnt FROM LOAN")
+    total_items = cursor.fetchone()["cnt"]
+    pagination = build_pagination(page=page, total_items=total_items, per_page=per_page)
+
+    cursor.execute(
+        """
         SELECT l.*, c.customer_name, v.vehicle_make, v.vehicle_model
         FROM LOAN l
         JOIN Customer c ON l.customer_id = c.customer_id
         JOIN Vehicle v ON l.vehicle_id = v.vehicle_id
-    """)
+        ORDER BY l.loan_id DESC
+        LIMIT %s OFFSET %s
+        """,
+        (pagination["per_page"], pagination["offset"]),
+    )
     loans = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('loans.html', loans=loans)
+    return render_template('loans.html', loans=loans, pagination=pagination)
 
 
 @finance_bp.route('/loans/create', methods=['GET', 'POST'])

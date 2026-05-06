@@ -1,11 +1,10 @@
 # utils.py
-import os
 from functools import wraps
 from flask import session, flash, redirect, url_for
 import mysql.connector
+import math
 
 def get_db_connection():
-    """MySQL connection; defaults match docker-compose.yml (override with env vars)."""
     return mysql.connector.connect(
         host="127.0.0.1",
         user="root",
@@ -44,3 +43,27 @@ def admin_required(f):
         
         return f(*args, **kwargs)
     return decorated_function
+
+
+def build_pagination(*, page: int, total_items: int, per_page: int = 10) -> dict:
+    """Create pagination metadata for LIMIT/OFFSET queries."""
+    if per_page <= 0:
+        per_page = 10
+
+    total_pages = max(1, math.ceil(max(0, total_items) / per_page))
+    page = max(1, min(int(page or 1), total_pages))
+    offset = (page - 1) * per_page
+
+    return {
+        "page": page,
+        "per_page": per_page,
+        "total_items": total_items,
+        "total_pages": total_pages,
+        "offset": offset,
+        "has_prev": page > 1,
+        "has_next": page < total_pages,
+        "prev_page": page - 1,
+        "next_page": page + 1,
+        "start_index": offset + 1 if total_items else 0,
+        "end_index": min(offset + per_page, total_items) if total_items else 0,
+    }

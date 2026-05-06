@@ -10,9 +10,9 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ../dropDDL.sql:/docker-entrypoint-initdb.d/01-dropDDL.sql:ro
-      - ../createDDL.sql:/docker-entrypoint-initdb.d/02-createDDL.sql:ro
-      - ../loadAll.sql:/docker-entrypoint-initdb.d/03-loadAll.sql:ro
+      - ../sql/dropDDL.sql:/docker-entrypoint-initdb.d/01-dropDDL.sql:ro
+      - ../sql/createDDL.sql:/docker-entrypoint-initdb.d/02-createDDL.sql:ro
+      - ../sql/loadAll.sql:/docker-entrypoint-initdb.d/03-loadAll.sql:ro
 
 volumes:
   mysql_data:
