@@ -285,6 +285,16 @@ p {
   gap: var(--space-5);
 }
 
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4) var(--space-5);
+}
+
+.form-grid .form-actions--full {
+  grid-column: 1 / -1;
+}
+
 .form-group label {
   display: block;
   font-weight: 600;
@@ -501,7 +511,7 @@ p {
 
 .auth-card {
   width: 100%;
-  max-width: 22rem;
+  max-width: 32rem;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -770,6 +780,48 @@ a.admin-btn:hover {
   padding: var(--space-6);
   margin-bottom: var(--space-6);
   box-shadow: var(--shadow-sm);
+}
+
+.collapsible-card.collapsed {
+  padding-bottom: var(--space-0);
+}
+
+.collapsible-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: var(--space-3);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.collapsible-trigger:focus {
+  outline: none;
+}
+
+.collapsible-body {
+  display: none;
+}
+
+.collapsible-card:not(.collapsed) .collapsible-body {
+  display: block;
+}
+
+.chevron {
+  width: 1rem;
+  height: 1rem;
+  border-right: 2px solid var(--color-text);
+  border-bottom: 2px solid var(--color-text);
+  transform: rotate(45deg);
+  transition: transform 0.25s ease;
+  margin-left: auto;
+}
+
+.collapsible-card:not(.collapsed) .chevron {
+  transform: rotate(225deg);
 }
 
 .division-header {

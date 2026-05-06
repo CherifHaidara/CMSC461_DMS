@@ -1,0 +1,56 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Edit department · Admin{% endblock %}
+
+{% block admin_content %}
+<div class="admin-form-header">
+    <h1>Edit department</h1>
+</div>
+
+<div class="admin-form-card">
+    <form method="POST" action="{{ url_for('admin.edit_department', department_id=department.department_id) }}" class="form-stack">
+        <div class="form-group">
+            <label for="department_name">Department name *</label>
+            <input type="text" id="department_name" name="department_name" required value="{{ department.department_name }}" autocomplete="off">
+        </div>
+
+        <div class="form-group">
+            <label for="division_id">Division *</label>
+            <select id="division_id" name="division_id" required>
+                <option value="">-- Select a division --</option>
+                {% for division in divisions %}
+                    <option value="{{ division.division_id }}" {% if division.division_id == department.division_id %}selected{% endif %}>
+                        {{ division.division_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="4">{{ department.description or '' }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status *</label>
+            <select id="status" name="status" required>
+                <option value="Active" {% if department.status == 'Active' %}selected{% endif %}>Active</option>
+                <option value="Inactive" {% if department.status == 'Inactive' %}selected{% endif %}>Inactive</option>
+            </select>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">Save changes</button>
+            <a href="{{ url_for('admin.view_divisions') }}" class="btn-cancel">Cancel</a>
+        </div>
+    </form>
+
+    {% if department.status == 'Active' %}
+        <div class="form-actions form-actions-secondary">
+            <form method="POST" action="{{ url_for('admin.deactivate_department', department_id=department.department_id) }}" onsubmit="return confirm('Deactivate this department?');">
+                <button type="submit" class="btn btn-danger">Deactivate department</button>
+            </form>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
