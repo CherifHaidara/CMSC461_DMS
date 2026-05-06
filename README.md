@@ -4,9 +4,9 @@
 First open docker desktop app
 Run the command in terminal:
 docker-compose up --build
-Then just run:
+Then just run every time you want to run the database:
 docker-compose up
-If you don't decide to delete the database
+
 
 # To stop and delete database
 First press CTRL + C to stop
