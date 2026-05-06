@@ -13,7 +13,14 @@ def directory():
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT name, dept_name FROM instructor ORDER BY name")
+        cursor.execute(
+            """
+            SELECT CONCAT(e.first_name, ' ', e.last_name), d.department_name
+            FROM EMPLOYEE e
+            JOIN DEPARTMENT d ON e.department_id = d.department_id
+            ORDER BY e.last_name, e.first_name
+            """
+        )
         instructors_data = cursor.fetchall()
     except mysql.connector.Error as err:
         flash(f"MySQL Error: {err}", "error")

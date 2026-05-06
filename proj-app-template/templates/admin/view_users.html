@@ -1,0 +1,152 @@
+{% extends "layout.html" %}
+
+{% block title %}View All Users - Admin{% endblock %}
+
+{% block styles %}
+    .admin-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #333;
+        padding-bottom: 15px;
+    }
+    .admin-header h1 {
+        margin: 0;
+        color: #333;
+    }
+    .admin-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+    .admin-btn:hover {
+        background-color: #218838;
+    }
+    .users-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: #f9f9f9;
+    }
+    .users-table thead {
+        background-color: #333;
+        color: white;
+    }
+    .users-table th, .users-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    .users-table tr:hover {
+        background-color: #f0f0f0;
+    }
+    .role-badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    .role-admin {
+        background-color: #dc3545;
+        color: white;
+    }
+    .role-sales {
+        background-color: #007bff;
+        color: white;
+    }
+    .role-service {
+        background-color: #17a2b8;
+        color: white;
+    }
+    .role-finance {
+        background-color: #fd7e14;
+        color: white;
+    }
+    .role-accountant {
+        background-color: #6f42c1;
+        color: white;
+    }
+    .no-users {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+        font-size: 18px;
+    }
+    .back-link {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 8px 15px;
+        background-color: #6c757d;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+    .back-link:hover {
+        background-color: #5a6268;
+    }
+{% endblock %}
+
+{% block content %}
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>Manage Users</h1>
+            <a href="{{ url_for('admin.create_user') }}" class="admin-btn">+ Create New User</a>
+        </div>
+
+        {% if users %}
+            <table class="users-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Employee Name</th>
+                        <th>Employee ID</th>
+                        <th>Role</th>
+                        <th>User ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td><strong>{{ user.username }}</strong></td>
+                            <td>{{ user.first_name }} {{ user.last_name }}</td>
+                            <td>{{ user.employee_id }}</td>
+                            <td>
+                                {% if user.role_id == 1 %}
+                                    <span class="role-badge role-admin">{{ user.role_name }}</span>
+                                {% elif user.role_id == 2 %}
+                                    <span class="role-badge role-sales">{{ user.role_name }}</span>
+                                {% elif user.role_id == 3 %}
+                                    <span class="role-badge role-service">{{ user.role_name }}</span>
+                                {% elif user.role_id == 4 %}
+                                    <span class="role-badge role-finance">{{ user.role_name }}</span>
+                                {% elif user.role_id == 5 %}
+                                    <span class="role-badge role-accountant">{{ user.role_name }}</span>
+                                {% else %}
+                                    <span class="role-badge">{{ user.role_name }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ user.user_id }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="no-users">
+                <p>No users found in the system.</p>
+            </div>
+        {% endif %}
+
+        <a href="{{ url_for('dashboard.dashboard') }}" class="back-link">← Back to Dashboard</a>
+    </div>
+{% endblock %}

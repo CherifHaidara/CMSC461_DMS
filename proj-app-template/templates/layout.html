@@ -50,9 +50,16 @@
             {% if 'user_id' in session %}
                 <a href="/dashboard">Dashboard</a>
                 <a href="/directory">Directory</a>
+<<<<<<< HEAD
                 <a href="{{ url_for('finance.loans') }}">Loans</a>
                 <a href="{{ url_for('finance.reports') }}">Reports</a>
                 <a href="{{ url_for('finance.search') }}">Search</a>
+=======
+                {% if 'user_role_id' in session and session['user_role_id'] == 1 %}
+                    <a href="/admin/users">Users</a>
+                    <a href="/admin/divisions">Divisions</a>
+                {% endif %}
+>>>>>>> 785ff13 (bidhan's part)
                 <a href="/logout">Logout</a>
             {% else %}
                 <a href="/">Login</a>

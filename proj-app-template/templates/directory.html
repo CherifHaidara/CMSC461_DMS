@@ -1,22 +1,22 @@
 {% extends "layout.html" %}
 
-{% block title %}Instructor List{% endblock %}
+{% block title %}Staff directory{% endblock %}
 
 {% block styles %}
-    .instructor-list { line-height: 1.6; }
+    .staff-list { line-height: 1.6; }
 {% endblock %}
 
 {% block content %}
-    <h2>Our Instructors</h2>
+    <h2>Employees by department</h2>
     
-    <ul class="instructor-list">
-        {% for instructor in instructors %}
+    <ul class="staff-list">
+        {% for row in instructors %}
             <li>
-                <strong>Name:</strong> {{ instructor[0] }} | 
-                <strong>Dept:</strong> {{ instructor[1] }}
+                <strong>Name:</strong> {{ row[0] }} | 
+                <strong>Department:</strong> {{ row[1] }}
             </li>
         {% else %}
-            <li>No instructors found (or there was an error connecting to the database).</li>
+            <li>No employees found (or there was an error connecting to the database).</li>
         {% endfor %}
     </ul>
 
