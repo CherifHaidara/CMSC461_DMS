@@ -15,14 +15,22 @@
             <nav class="nav-links" aria-label="Main">
                 {% if 'user_id' in session %}
                     <a href="{{ url_for('dashboard.dashboard') }}" class="{% if request.path == '/dashboard' %}is-nav-active{% endif %}">Dashboard</a>
-                    <a href="{{ url_for('directory.directory') }}" class="{% if request.path.startswith('/directory') %}is-nav-active{% endif %}">Directory</a>
-                    <a href="{{ url_for('customer.customers') }}">Customers</a>
-                    <a href="{{ url_for('vehicle.vehicles') }}">Vehicles</a>
-                    <a href="{{ url_for('sales.sales_list') }}" class="{% if request.path.startswith('/sales') %}is-nav-active{% endif %}">Sales</a>
-                    <a href="{{ url_for('service.service_list') }}" class="{% if request.path.startswith('/services') %}is-nav-active{% endif %}">Services</a>
-                    <a href="{{ url_for('finance.loans') }}" class="{% if request.path.startswith('/loans') %}is-nav-active{% endif %}">Loans</a>
-                    <a href="{{ url_for('finance.reports') }}" class="{% if request.path.startswith('/reports') %}is-nav-active{% endif %}">Reports</a>
                     <a href="{{ url_for('finance.search') }}" class="{% if request.path.startswith('/search') %}is-nav-active{% endif %}">Search</a>
+                    {% if session.get('user_role_id') in [1, 2] %}
+                        <a href="{{ url_for('directory.directory') }}" class="{% if request.path.startswith('/directory') %}is-nav-active{% endif %}">Directory</a>
+                        <a href="{{ url_for('customer.customers') }}" class="{% if request.path.startswith('/customers') %}is-nav-active{% endif %}">Customers</a>
+                        <a href="{{ url_for('vehicle.vehicles') }}" class="{% if request.path.startswith('/vehicles') %}is-nav-active{% endif %}">Vehicles</a>
+                        <a href="{{ url_for('sales.sales_list') }}" class="{% if request.path.startswith('/sales') %}is-nav-active{% endif %}">Sales</a>
+                    {% endif %}
+                    {% if session.get('user_role_id') in [1, 3] %}
+                        <a href="{{ url_for('service.service_list') }}" class="{% if request.path.startswith('/services') %}is-nav-active{% endif %}">Services</a>
+                    {% endif %}
+                    {% if session.get('user_role_id') in [1, 4] %}
+                        <a href="{{ url_for('finance.loans') }}" class="{% if request.path.startswith('/loans') %}is-nav-active{% endif %}">Loans</a>
+                    {% endif %}
+                    {% if session.get('user_role_id') in [1, 4, 5] %}
+                        <a href="{{ url_for('finance.reports') }}" class="{% if request.path.startswith('/reports') %}is-nav-active{% endif %}">Reports</a>
+                    {% endif %}
                     {% if session.get('user_role_id') == 1 %}
                         <a href="{{ url_for('admin.admin_home') }}" class="{% if request.path.startswith('/admin') %}is-nav-active{% endif %}">Admin</a>
                     {% endif %}

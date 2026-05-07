@@ -1,12 +1,12 @@
 # blueprints/service.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from utils import get_db_connection, login_required, build_pagination
+from utils import get_db_connection, login_required, role_required, build_pagination
 
 service_bp = Blueprint('service', __name__)
 
 
 @service_bp.route('/services')
-@login_required
+@role_required(1, 3)
 def service_list():
     per_page = 10
     page = request.args.get('page', 1, type=int)
@@ -40,7 +40,7 @@ def service_list():
 
 
 @service_bp.route('/services/create', methods=['GET', 'POST'])
-@login_required
+@role_required(1, 3)
 def create_service():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
@@ -107,7 +107,7 @@ def create_service():
 
 
 @service_bp.route('/services/<int:service_id>')
-@login_required
+@role_required(1, 3)
 def service_detail(service_id):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
@@ -149,7 +149,7 @@ def service_detail(service_id):
 
 
 @service_bp.route('/services/<int:service_id>/parts/add', methods=['GET', 'POST'])
-@login_required
+@role_required(1, 3)
 def add_part(service_id):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
@@ -200,7 +200,7 @@ def add_part(service_id):
 
 
 @service_bp.route('/vehicles/<int:vehicle_id>/history')
-@login_required
+@role_required(1, 3)
 def vehicle_history(vehicle_id):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
