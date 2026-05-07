@@ -21,7 +21,7 @@ def vehicles():
 
         query = """
             SELECT *
-            FROM VEHICLE
+            FROM Vehicle
             WHERE 1=1
         """
 

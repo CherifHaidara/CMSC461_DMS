@@ -15,7 +15,7 @@ def customers():
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
 
-        query = "SELECT * FROM CUSTOMER"
+        query = "SELECT * FROM Customer"
         cursor.execute(query)
 
         customers_data = cursor.fetchall()
