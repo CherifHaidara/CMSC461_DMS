@@ -1,12 +1,12 @@
 from flask import Blueprint, render_template, flash, request, redirect, url_for
 import mysql.connector
-from utils import get_db_connection, login_required
+from utils import get_db_connection, login_required, role_required
 
 vehicle_bp = Blueprint('vehicle', __name__)
 
 
 @vehicle_bp.route('/vehicles')
-@login_required
+@role_required(1, 2)
 def vehicles():
 
     vehicles_data = []
@@ -64,7 +64,7 @@ def vehicles():
 
 
 @vehicle_bp.route('/vehicles/add', methods=['GET', 'POST'])
-@login_required
+@role_required(1, 2)
 def add_vehicle():
 
     if request.method == 'POST':
@@ -133,7 +133,7 @@ def add_vehicle():
 
 
 @vehicle_bp.route('/vehicles/<int:vehicle_id>/edit', methods=['GET', 'POST'])
-@login_required
+@role_required(1, 2)
 def edit_vehicle(vehicle_id):
 
     vehicle = None
@@ -219,7 +219,7 @@ def edit_vehicle(vehicle_id):
 
 
 @vehicle_bp.route('/vehicles/<int:vehicle_id>/delete')
-@login_required
+@role_required(1, 2)
 def delete_vehicle(vehicle_id):
 
     try:

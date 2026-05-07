@@ -1,12 +1,12 @@
 from flask import Blueprint, render_template, flash, request, redirect, url_for
 import mysql.connector
-from utils import get_db_connection, login_required
+from utils import get_db_connection, login_required, role_required
 
 customer_bp = Blueprint('customer', __name__)
 
 
 @customer_bp.route('/customers')
-@login_required
+@role_required(1, 2)
 def customers():
 
     customers_data = []
@@ -47,7 +47,7 @@ def customers():
 
 
 @customer_bp.route('/customers/add', methods=['GET', 'POST'])
-@login_required
+@role_required(1, 2)
 def add_customer():
 
     if request.method == 'POST':
@@ -94,7 +94,7 @@ def add_customer():
 
 
 @customer_bp.route('/customers/<int:customer_id>/edit', methods=['GET', 'POST'])
-@login_required
+@role_required(1, 2)
 def edit_customer(customer_id):
 
     customer = None
@@ -188,7 +188,7 @@ def edit_customer(customer_id):
 
 
 @customer_bp.route('/customers/<int:customer_id>')
-@login_required
+@role_required(1, 2)
 def customer_detail(customer_id):
 
     customer  = None

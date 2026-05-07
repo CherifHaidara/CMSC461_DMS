@@ -1,12 +1,12 @@
 # blueprints/sales.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from utils import get_db_connection, login_required, build_pagination
+from utils import get_db_connection, login_required, role_required, build_pagination
 
 sales_bp = Blueprint('sales', __name__)
 
 
 @sales_bp.route('/sales')
-@login_required
+@role_required(1, 2)
 def sales_list():
     per_page = 10
     page = request.args.get('page', 1, type=int)
@@ -42,7 +42,7 @@ def sales_list():
 
 
 @sales_bp.route('/sales/create', methods=['GET', 'POST'])
-@login_required
+@role_required(1, 2)
 def create_sale():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
@@ -119,7 +119,7 @@ def create_sale():
 
 
 @sales_bp.route('/sales/<int:sale_id>')
-@login_required
+@role_required(1, 2)
 def sale_detail(sale_id):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
