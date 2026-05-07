@@ -1,0 +1,164 @@
+{% extends "layout.html" %}
+
+{% block title %}Customer Details{% endblock %}
+
+{% block content %}
+<div class="page-header">
+
+    <div>
+        <h1 class="page-title">
+            {{ customer.customer_name }}
+        </h1>
+
+        <p class="page-subtitle">
+            Customer profile, purchase history, and service history.
+        </p>
+    </div>
+
+    <div class="toolbar">
+
+        <a href="{{ url_for('customer.edit_customer', customer_id=customer.customer_id) }}"
+           class="btn btn--primary btn--sm">
+            Edit customer
+        </a>
+
+        <a href="{{ url_for('customer.customers') }}"
+           class="btn btn--secondary btn--sm">
+            All customers
+        </a>
+
+    </div>
+
+</div>
+
+<div class="card card--padded dl-grid card--measure-md">
+
+    <p>
+        <strong>Customer ID</strong>
+        {{ customer.customer_id }}
+    </p>
+
+    <p>
+        <strong>Name</strong>
+        {{ customer.customer_name }}
+    </p>
+
+    <p>
+        <strong>Address</strong>
+        {{ customer.customer_address }}
+    </p>
+
+    <p>
+        <strong>Email</strong>
+        {{ customer.customer_email }}
+    </p>
+
+    <p>
+        <strong>Phone</strong>
+        {{ customer.customer_phone }}
+    </p>
+
+</div>
+
+<h3>Purchase history</h3>
+
+{% if purchases %}
+<div class="table-wrap">
+
+    <table class="data-table">
+
+        <thead>
+            <tr>
+                <th>Sale ID</th>
+                <th>Vehicle</th>
+                <th>Sale Price</th>
+                <th>Sale Date</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for sale in purchases %}
+            <tr>
+
+                <td>{{ sale.sale_id }}</td>
+
+                <td>
+                    {{ sale.vehicle_make }}
+                    {{ sale.vehicle_model }}
+                </td>
+
+                <td>${{ sale.sale_price }}</td>
+
+                <td>{{ sale.sale_date }}</td>
+
+            </tr>
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% else %}
+
+<p class="text-muted">
+    No purchases found for this customer.
+</p>
+
+{% endif %}
+
+<h3>Service history</h3>
+
+{% if services %}
+<div class="table-wrap">
+
+    <table class="data-table">
+
+        <thead>
+            <tr>
+                <th>Service ID</th>
+                <th>Vehicle</th>
+                <th>Service Type</th>
+                <th>Service Date</th>
+                <th>Cost</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for service in services %}
+            <tr>
+
+                <td>{{ service.service_id }}</td>
+
+                <td>
+                    {{ service.vehicle_make }}
+                    {{ service.vehicle_model }}
+                </td>
+
+                <td>{{ service.service_type }}</td>
+
+                <td>{{ service.service_date }}</td>
+
+                <td>${{ service.service_cost }}</td>
+
+            </tr>
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% else %}
+
+<p class="text-muted">
+    No service history found for this customer.
+</p>
+
+{% endif %}
+
+{% endblock %}
