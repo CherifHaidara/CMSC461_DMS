@@ -5,6 +5,8 @@ from blueprints.dashboard import dashboard_bp
 from blueprints.directory import directory_bp
 from blueprints.finance import finance_bp
 from blueprints.admin import admin_bp
+from blueprints.sales import sales_bp
+from blueprints.service import service_bp
 from blueprints.customer import customer_bp
 from blueprints.vehicle import vehicle_bp
 
@@ -17,6 +19,8 @@ app.register_blueprint(dashboard_bp)
 app.register_blueprint(directory_bp)
 app.register_blueprint(finance_bp)
 app.register_blueprint(admin_bp)
+app.register_blueprint(sales_bp)
+app.register_blueprint(service_bp)
 app.register_blueprint(customer_bp)
 app.register_blueprint(vehicle_bp)
 
