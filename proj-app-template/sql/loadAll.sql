@@ -45,17 +45,17 @@ INSERT INTO EMPLOYEE (employee_id, first_name, last_name, emp_email, emp_phone, 
 
 
 -- Users
-INSERT INTO `USER` (user_id, username, password, employee_id, role_id) VALUES
-(1, 'jcarter', 'hashed_pw_1', 1, 2),
-(2, 'mlopez', 'hashed_pw_2', 2, 2),
-(3, 'dkim', 'hashed_pw_3', 3, 2),
-(4, 'sbrown', 'hashed_pw_4', 4, 3),
-(5, 'knguyen', 'hashed_pw_5', 5, 3),
-(6, 'radams', 'hashed_pw_6', 6, 4),
-(7, 'mturner', 'hashed_pw_7', 7, 5),
-(8, 'lharris', 'hashed_pw_8', 8, 4),
-(9, 'cjohnson', 'hashed_pw_9', 9, 1),
-(10, 'ewhite', 'hashed_pw_10', 10, 3);
+INSERT INTO `USER` (user_id, username, password, employee_id, role_id, status) VALUES
+(1, 'jcarter', 'hashed_pw_1', 1, 2, 'Active'),
+(2, 'mlopez', 'hashed_pw_2', 2, 2, 'Active'),
+(3, 'dkim', 'hashed_pw_3', 3, 2, 'Active'),
+(4, 'sbrown', 'hashed_pw_4', 4, 3, 'Active'),
+(5, 'knguyen', 'hashed_pw_5', 5, 3, 'Active'),
+(6, 'radams', 'hashed_pw_6', 6, 4, 'Active'),
+(7, 'mturner', 'hashed_pw_7', 7, 5, 'Active'),
+(8, 'lharris', 'hashed_pw_8', 8, 4, 'Active'),
+(9, 'cjohnson', 'hashed_pw_9', 9, 1, 'Active'),
+(10, 'ewhite', 'hashed_pw_10', 10, 3, 'Active');
 
 -- Customers
 INSERT INTO Customer (customer_name, customer_address, customer_email) VALUES

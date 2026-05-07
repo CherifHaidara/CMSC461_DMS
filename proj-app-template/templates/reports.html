@@ -29,15 +29,21 @@
         </div>
     </div>
 
-    <div class="division-card">
+    <div class="division-card collapsible-card collapsed">
         <div class="division-header">
-            <h2>Sales by department</h2>
-            <span class="division-id">{{ sales_by_dept|length }} departments</span>
+            <div class="collapsible-trigger" role="button" tabindex="0" aria-expanded="false">
+                <div>
+                    <h2>Sales by department</h2>
+                    <span class="division-id">{{ sales_by_dept|length }} departments</span>
+                </div>
+                <span class="chevron"></span>
+            </div>
         </div>
-        <div class="division-description">
-            Units sold and revenue rolled up by department.
-        </div>
-        <div class="departments-section">
+        <div class="collapsible-body">
+            <div class="division-description">
+                Units sold and revenue rolled up by department.
+            </div>
+            <div class="departments-section">
             <div class="departments-label">Departments</div>
             {% if sales_by_dept %}
                 {% for row in sales_by_dept %}
@@ -52,14 +58,21 @@
             {% else %}
                 <div class="no-departments">No sales data for any department.</div>
             {% endif %}
+            </div>
         </div>
     </div>
 
-    <div class="division-card">
+    <div class="division-card collapsible-card collapsed">
         <div class="division-header">
-            <h2>Service operations</h2>
+            <div class="collapsible-trigger" role="button" tabindex="0" aria-expanded="false">
+                <div>
+                    <h2>Service operations</h2>
+                </div>
+                <span class="chevron"></span>
+            </div>
         </div>
-        <div class="departments-section">
+        <div class="collapsible-body">
+            <div class="departments-section">
             <div class="department-item">
                 <div class="department-name">Volume</div>
                 <div class="department-description">{{ service_stats.total_services }} total services recorded in the system.</div>
@@ -68,18 +81,25 @@
                 <div class="department-name">Revenue</div>
                 <div class="department-description">Lifetime service revenue: <strong>${{ service_stats.service_revenue or 0 }}</strong>.</div>
             </div>
+            </div>
         </div>
     </div>
 
-    <div class="division-card">
+    <div class="division-card collapsible-card collapsed">
         <div class="division-header">
-            <h2>Loan portfolio</h2>
-            <span class="division-id">{{ loan_summary|length }} statuses</span>
+            <div class="collapsible-trigger" role="button" tabindex="0" aria-expanded="false">
+                <div>
+                    <h2>Loan portfolio</h2>
+                    <span class="division-id">{{ loan_summary|length }} statuses</span>
+                </div>
+                <span class="chevron"></span>
+            </div>
         </div>
-        <div class="division-description">
-            Count of loans grouped by status.
-        </div>
-        <div class="departments-section">
+        <div class="collapsible-body">
+            <div class="division-description">
+                Count of loans grouped by status.
+            </div>
+            <div class="departments-section">
             <div class="departments-label">Status breakdown</div>
             {% if loan_summary %}
                 {% for row in loan_summary %}
@@ -94,18 +114,25 @@
             {% else %}
                 <div class="no-departments">No loan records.</div>
             {% endif %}
+            </div>
         </div>
     </div>
 
-    <div class="division-card">
+    <div class="division-card collapsible-card collapsed">
         <div class="division-header">
-            <h2>Outstanding balances</h2>
-            <span class="division-id">{{ balances|length }} loans</span>
+            <div class="collapsible-trigger" role="button" tabindex="0" aria-expanded="false">
+                <div>
+                    <h2>Outstanding balances</h2>
+                    <span class="division-id">{{ balances|length }} loans</span>
+                </div>
+                <span class="chevron"></span>
+            </div>
         </div>
-        <div class="division-description">
-            Principal remaining per customer after payments.
-        </div>
-        <div class="departments-section">
+        <div class="collapsible-body">
+            <div class="division-description">
+                Principal remaining per customer after payments.
+            </div>
+            <div class="departments-section">
             <div class="departments-label">Customers</div>
             {% if balances %}
                 {% for row in balances %}
@@ -123,6 +150,7 @@
             {% else %}
                 <div class="no-departments">No balance data.</div>
             {% endif %}
+            </div>
         </div>
     </div>
 </div>

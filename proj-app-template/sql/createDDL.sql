@@ -40,6 +40,7 @@ CREATE TABLE `USER` (
     password    VARCHAR(255) NOT NULL,
     employee_id INT NOT NULL,
     role_id     INT NOT NULL,
+    status      VARCHAR(50) NOT NULL DEFAULT 'Active',
     FOREIGN KEY (employee_id) REFERENCES EMPLOYEE(employee_id),
     FOREIGN KEY (role_id) REFERENCES ROLE(role_id)
 );
