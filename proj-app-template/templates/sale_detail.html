@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block title %}Sale #{{ sale.sale_id }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Sale #{{ sale.sale_id }}</h1>
+        <p class="page-subtitle">Full transaction details.</p>
+    </div>
+    <a href="{{ url_for('sales.sales_list') }}" class="btn btn--secondary btn--sm">Back to Sales</a>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;max-width:860px;">
+
+    <div class="card card--padded">
+        <h2 style="margin:0 0 1rem;font-size:1rem;text-transform:uppercase;letter-spacing:.05em;opacity:.6;">Transaction</h2>
+        <dl class="detail-list">
+            <dt>Sale Date</dt>     <dd>{{ sale.sale_date }}</dd>
+            <dt>Sale Price</dt>    <dd><strong>${{ "%.2f"|format(sale.sale_price) }}</strong></dd>
+            <dt>Financing</dt>     <dd>{{ sale.financing_option }}</dd>
+            <dt>Payment Method</dt><dd>{{ sale.payment_method }}</dd>
+        </dl>
+    </div>
+
+    <div class="card card--padded">
+        <h2 style="margin:0 0 1rem;font-size:1rem;text-transform:uppercase;letter-spacing:.05em;opacity:.6;">Vehicle</h2>
+        <dl class="detail-list">
+            <dt>Vehicle</dt>    <dd><strong>{{ sale.vehicle_label }}</strong></dd>
+            <dt>VIN</dt>        <dd style="font-family:monospace;">{{ sale.vehicle_vin }}</dd>
+            <dt>Condition</dt>  <dd>{{ sale.vehicle_condition }}</dd>
+        </dl>
+    </div>
+
+    <div class="card card--padded">
+        <h2 style="margin:0 0 1rem;font-size:1rem;text-transform:uppercase;letter-spacing:.05em;opacity:.6;">Customer</h2>
+        <dl class="detail-list">
+            <dt>Name</dt>    <dd><strong>{{ sale.customer_name }}</strong></dd>
+            <dt>Email</dt>   <dd>{{ sale.customer_email }}</dd>
+            <dt>Address</dt> <dd>{{ sale.customer_address }}</dd>
+        </dl>
+    </div>
+
+    <div class="card card--padded">
+        <h2 style="margin:0 0 1rem;font-size:1rem;text-transform:uppercase;letter-spacing:.05em;opacity:.6;">Employee / Department</h2>
+        <dl class="detail-list">
+            <dt>Employee</dt>    <dd><strong>{{ sale.employee_name }}</strong></dd>
+            <dt>Position</dt>   <dd>{{ sale.position }}</dd>
+            <dt>Email</dt>      <dd>{{ sale.emp_email }}</dd>
+            <dt>Department</dt> <dd>{{ sale.department_name }}</dd>
+        </dl>
+    </div>
+
+</div>
+
+<style>
+.detail-list { display:grid; grid-template-columns:max-content 1fr; gap:.35rem .75rem; margin:0; }
+.detail-list dt { opacity:.55; font-size:.85rem; }
+.detail-list dd { margin:0; }
+</style>
+{% endblock %}

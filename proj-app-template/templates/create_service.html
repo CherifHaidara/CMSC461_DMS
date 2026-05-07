@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% block title %}New Service Record{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">New Service Record</h1>
+        <p class="page-subtitle">Log a new vehicle service or maintenance job.</p>
+    </div>
+    <a href="{{ url_for('service.service_list') }}" class="btn btn--secondary btn--sm">Back to Services</a>
+</div>
+
+<div class="card card--padded card--measure-sm">
+    <form method="POST" action="{{ url_for('service.create_service') }}">
+
+        <div class="form-group">
+            <label for="customer_id">Customer</label>
+            <select id="customer_id" name="customer_id" required>
+                <option value="" disabled selected>Select a customer…</option>
+                {% for c in customers %}
+                <option value="{{ c.customer_id }}">{{ c.customer_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="vehicle_id">Vehicle</label>
+            <select id="vehicle_id" name="vehicle_id" required>
+                <option value="" disabled selected>Select a vehicle…</option>
+                {% for v in vehicles %}
+                <option value="{{ v.vehicle_id }}">{{ v.label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="department_id">Department</label>
+            <select id="department_id" name="department_id" required>
+                <option value="" disabled selected>Select a department…</option>
+                {% for d in departments %}
+                <option value="{{ d.department_id }}">{{ d.department_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="employee_id">Technician</label>
+            <select id="employee_id" name="employee_id" required>
+                <option value="" disabled selected>Select a technician…</option>
+                {% for e in employees %}
+                <option value="{{ e.employee_id }}">{{ e.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="service_type">Service Type</label>
+            <input type="text" id="service_type" name="service_type"
+                   placeholder="e.g. Oil Change, Brake Inspection, Transmission Repair" required>
+        </div>
+
+        <div class="form-group">
+            <label for="service_date">Service Date</label>
+            <input type="date" id="service_date" name="service_date" required>
+        </div>
+
+        <div class="form-group">
+            <label for="service_cost">Labor Cost ($)</label>
+            <input type="number" id="service_cost" name="service_cost" step="0.01" min="0" placeholder="0.00" required>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn--primary">Create Service Record</button>
+            <a href="{{ url_for('service.service_list') }}" class="btn btn--secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('service_date').valueAsDate = new Date();
+</script>
+{% endblock %}

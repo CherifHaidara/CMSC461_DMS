@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+
+{% block title %}New Sale{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">New Sale</h1>
+        <p class="page-subtitle">Record a new vehicle sales transaction.</p>
+    </div>
+    <a href="{{ url_for('sales.sales_list') }}" class="btn btn--secondary btn--sm">Back to Sales</a>
+</div>
+
+<div class="card card--padded card--measure-sm">
+    <form method="POST" action="{{ url_for('sales.create_sale') }}">
+
+        <div class="form-group">
+            <label for="customer_id">Customer</label>
+            <select id="customer_id" name="customer_id" required>
+                <option value="" disabled selected>Select a customer…</option>
+                {% for c in customers %}
+                <option value="{{ c.customer_id }}">{{ c.customer_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="vehicle_id">Vehicle (available only)</label>
+            <select id="vehicle_id" name="vehicle_id" required>
+                <option value="" disabled selected>Select a vehicle…</option>
+                {% for v in vehicles %}
+                <option value="{{ v.vehicle_id }}" data-price="{{ v.vehicle_price }}">{{ v.label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="department_id">Department</label>
+            <select id="department_id" name="department_id" required>
+                <option value="" disabled selected>Select a department…</option>
+                {% for d in departments %}
+                <option value="{{ d.department_id }}">{{ d.department_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="employee_id">Sales Employee</label>
+            <select id="employee_id" name="employee_id" required>
+                <option value="" disabled selected>Select an employee…</option>
+                {% for e in employees %}
+                <option value="{{ e.employee_id }}">{{ e.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="sale_date">Sale Date</label>
+            <input type="date" id="sale_date" name="sale_date" required>
+        </div>
+
+        <div class="form-group">
+            <label for="sale_price">Sale Price ($)</label>
+            <input type="number" id="sale_price" name="sale_price" step="0.01" min="0" placeholder="0.00" required>
+        </div>
+
+        <div class="form-group">
+            <label for="financing_option">Financing Option</label>
+            <select id="financing_option" name="financing_option" required>
+                <option value="" disabled selected>Select…</option>
+                <option value="cash">Cash</option>
+                <option value="loan">Loan</option>
+                <option value="lease">Lease</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="payment_method">Payment Method</label>
+            <select id="payment_method" name="payment_method" required>
+                <option value="" disabled selected>Select…</option>
+                <option value="credit_card">Credit Card</option>
+                <option value="debit_card">Debit Card</option>
+                <option value="cash">Cash</option>
+                <option value="bank_transfer">Bank Transfer</option>
+            </select>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn--primary">Record Sale</button>
+            <a href="{{ url_for('sales.sales_list') }}" class="btn btn--secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Auto-fill sale price with vehicle list price when a vehicle is selected
+    document.getElementById('vehicle_id').addEventListener('change', function () {
+        const selected = this.options[this.selectedIndex];
+        const price = selected.getAttribute('data-price');
+        if (price) {
+            document.getElementById('sale_price').value = parseFloat(price).toFixed(2);
+        }
+    });
+
+    // Default sale date to today
+    document.getElementById('sale_date').valueAsDate = new Date();
+</script>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+
+{% block title %}Service History — {{ vehicle.vehicle_year }} {{ vehicle.vehicle_make }} {{ vehicle.vehicle_model }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Vehicle Service History</h1>
+        <p class="page-subtitle">
+            {{ vehicle.vehicle_year }} {{ vehicle.vehicle_make }} {{ vehicle.vehicle_model }}
+            — <span style="font-family:monospace;">{{ vehicle.vehicle_vin }}</span>
+        </p>
+    </div>
+    <div style="display:flex;gap:.5rem;">
+        <a href="{{ url_for('service.service_list') }}" class="btn btn--secondary btn--sm">All Services</a>
+    </div>
+</div>
+
+<div class="card card--padded" style="max-width:680px;margin-bottom:1.25rem;">
+    <dl class="detail-list">
+        <dt>Condition</dt>  <dd>{{ vehicle.vehicle_condition }}</dd>
+        <dt>Mileage</dt>    <dd>{{ "{:,}".format(vehicle.vehicle_mileage) }} mi</dd>
+        <dt>Status</dt>     <dd>{{ vehicle.vehicle_availability_status }}</dd>
+    </dl>
+</div>
+
+<div class="table-wrap">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Service Type</th>
+                <th>Customer</th>
+                <th>Technician</th>
+                <th>Dept</th>
+                <th>Parts</th>
+                <th>Labor</th>
+                <th>Parts Cost</th>
+                <th>Total</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sv in history %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ sv.service_date }}</td>
+                <td><strong>{{ sv.service_type }}</strong></td>
+                <td>{{ sv.customer_name }}</td>
+                <td>{{ sv.technician }}</td>
+                <td>{{ sv.department_name }}</td>
+                <td>{{ sv.parts_count }}</td>
+                <td>${{ "%.2f"|format(sv.service_cost) }}</td>
+                <td>${{ "%.2f"|format(sv.parts_total) }}</td>
+                <td><strong>${{ "%.2f"|format(sv.service_cost + sv.parts_total) }}</strong></td>
+                <td><a href="{{ url_for('service.service_detail', service_id=sv.service_id) }}" class="btn btn--secondary btn--sm">View</a></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="11" class="text-muted">No service records for this vehicle.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        {% if history %}
+        <tfoot>
+            <tr>
+                <td colspan="9" style="text-align:right;font-weight:600;">Lifetime Total</td>
+                <td>
+                    <strong>
+                        ${{ "%.2f"|format(history | sum(attribute='service_cost') + history | sum(attribute='parts_total')) }}
+                    </strong>
+                </td>
+                <td></td>
+            </tr>
+        </tfoot>
+        {% endif %}
+    </table>
+</div>
+
+<style>
+.detail-list { display:grid; grid-template-columns:max-content 1fr; gap:.35rem .75rem; margin:0; }
+.detail-list dt { opacity:.55; font-size:.85rem; }
+.detail-list dd { margin:0; }
+</style>
+{% endblock %}

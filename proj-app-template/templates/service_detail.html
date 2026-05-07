@@ -1,0 +1,112 @@
+{% extends "layout.html" %}
+
+{% block title %}Service #{{ service.service_id }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Service #{{ service.service_id }}</h1>
+        <p class="page-subtitle">{{ service.service_type }} — {{ service.service_date }}</p>
+    </div>
+    <div style="display:flex;gap:.5rem;">
+        <a href="{{ url_for('service.add_part', service_id=service.service_id) }}" class="btn btn--primary btn--sm">+ Add Part</a>
+        <a href="{{ url_for('service.vehicle_history', vehicle_id=service.vehicle_id) }}" class="btn btn--secondary btn--sm">Vehicle Service History</a>
+        <a href="{{ url_for('service.service_list') }}" class="btn btn--secondary btn--sm">Back</a>
+    </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;max-width:860px;">
+
+    <div class="card card--padded">
+        <h2 style="margin:0 0 1rem;font-size:1rem;text-transform:uppercase;letter-spacing:.05em;opacity:.6;">Service Info</h2>
+        <dl class="detail-list">
+            <dt>Type</dt>        <dd><strong>{{ service.service_type }}</strong></dd>
+            <dt>Date</dt>        <dd>{{ service.service_date }}</dd>
+            <dt>Labor Cost</dt>  <dd>${{ "%.2f"|format(service.service_cost) }}</dd>
+            <dt>Department</dt>  <dd>{{ service.department_name }}</dd>
+        </dl>
+    </div>
+
+    <div class="card card--padded">
+        <h2 style="margin:0 0 1rem;font-size:1rem;text-transform:uppercase;letter-spacing:.05em;opacity:.6;">Vehicle</h2>
+        <dl class="detail-list">
+            <dt>Vehicle</dt> <dd><strong>{{ service.vehicle_label }}</strong></dd>
+            <dt>VIN</dt>     <dd style="font-family:monospace;">{{ service.vehicle_vin }}</dd>
+        </dl>
+    </div>
+
+    <div class="card card--padded">
+        <h2 style="margin:0 0 1rem;font-size:1rem;text-transform:uppercase;letter-spacing:.05em;opacity:.6;">Customer</h2>
+        <dl class="detail-list">
+            <dt>Name</dt>  <dd><strong>{{ service.customer_name }}</strong></dd>
+            <dt>Email</dt> <dd>{{ service.customer_email }}</dd>
+        </dl>
+    </div>
+
+    <div class="card card--padded">
+        <h2 style="margin:0 0 1rem;font-size:1rem;text-transform:uppercase;letter-spacing:.05em;opacity:.6;">Technician</h2>
+        <dl class="detail-list">
+            <dt>Name</dt>     <dd><strong>{{ service.technician }}</strong></dd>
+            <dt>Position</dt> <dd>{{ service.position }}</dd>
+        </dl>
+    </div>
+
+</div>
+
+<div style="max-width:860px;margin-top:1.25rem;">
+    <div class="page-header" style="margin-bottom:.75rem;">
+        <h2 style="margin:0;font-size:1.1rem;">Parts Used</h2>
+        <a href="{{ url_for('service.add_part', service_id=service.service_id) }}" class="btn btn--primary btn--sm">+ Add Part</a>
+    </div>
+
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Part Name</th>
+                    <th>Qty</th>
+                    <th>Unit Cost</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set parts_total = namespace(value=0) %}
+                {% for p in parts %}
+                    {% set subtotal = p.quantity * p.part_cost %}
+                    {% set parts_total.value = parts_total.value + subtotal %}
+                <tr>
+                    <td>{{ p.part_name }}</td>
+                    <td>{{ p.quantity }}</td>
+                    <td>${{ "%.2f"|format(p.part_cost) }}</td>
+                    <td>${{ "%.2f"|format(subtotal) }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-muted">No parts recorded for this service.
+                        <a href="{{ url_for('service.add_part', service_id=service.service_id) }}">Add one</a>.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            {% if parts %}
+            <tfoot>
+                <tr>
+                    <td colspan="3" style="text-align:right;font-weight:600;">Parts Total</td>
+                    <td><strong>${{ "%.2f"|format(parts_total.value) }}</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="text-align:right;font-weight:600;">Grand Total (labor + parts)</td>
+                    <td><strong>${{ "%.2f"|format(service.service_cost + parts_total.value) }}</strong></td>
+                </tr>
+            </tfoot>
+            {% endif %}
+        </table>
+    </div>
+</div>
+
+<style>
+.detail-list { display:grid; grid-template-columns:max-content 1fr; gap:.35rem .75rem; margin:0; }
+.detail-list dt { opacity:.55; font-size:.85rem; }
+.detail-list dd { margin:0; }
+</style>
+{% endblock %}
