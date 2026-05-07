@@ -226,12 +226,39 @@ def delete_vehicle(vehicle_id):
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
 
-        query = """
-            DELETE FROM Vehicle
-            WHERE vehicle_id = %s
-        """
+        # Check each table that holds a FK reference to Vehicle before deleting.
+        # Attempting a blind DELETE will raise a 1451 FK constraint error if any
+        # sales, services, or loans reference this vehicle.
+        dependency_checks = [
+            ("Sale",    "sale_id",    "sale record(s)"),
+            ("SERVICE", "service_id", "service record(s)"),
+            ("LOAN",    "loan_id",    "loan record(s)"),
+        ]
 
-        cursor.execute(query, (vehicle_id,))
+        blocking_refs = []
+
+        for table, id_col, label in dependency_checks:
+            cursor.execute(
+                f"SELECT COUNT(*) AS cnt FROM {table} WHERE vehicle_id = %s",
+                (vehicle_id,)
+            )
+            row = cursor.fetchone()
+            if row and row['cnt'] > 0:
+                blocking_refs.append(f"{row['cnt']} {label}")
+
+        if blocking_refs:
+            refs_str = ", ".join(blocking_refs)
+            flash(
+                f"Cannot remove vehicle — it is referenced by: {refs_str}. "
+                f"Please resolve those records first.",
+                "error"
+            )
+            return redirect(url_for('vehicle.vehicles'))
+
+        cursor.execute(
+            "DELETE FROM Vehicle WHERE vehicle_id = %s",
+            (vehicle_id,)
+        )
 
         conn.commit()
 
