@@ -1,1 +1,39 @@
+{% extends "layout.html" %}
 
+{% block title %}Customers{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Customers</h1>
+        <p class="page-subtitle">Customer records and information.</p>
+    </div>
+</div>
+
+<div class="table-wrap">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Customer ID</th>
+                <th>Customer Name</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for customer in customers %}
+            <tr>
+                <td>{{ customer.customer_id }}</td>
+                <td>{{ customer.customer_name }}</td>
+            </tr>
+
+            {% else %}
+            <tr>
+                <td colspan="2" class="text-muted">
+                    No customers found.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
