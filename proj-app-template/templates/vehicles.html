@@ -155,9 +155,28 @@
 
 </div>
 
-<a href="{{ url_for('dashboard.dashboard') }}"
-   class="back-link">
-    ← Back to dashboard
-</a>
+{% if pagination.total_pages > 1 %}
+<nav class="pagination" aria-label="Vehicles pages">
+    {% if pagination.has_prev %}
+        <a class="page-link" href="{{ url_for('vehicle.vehicles', page=pagination.prev_page) }}">Prev</a>
+    {% else %}
+        <span class="page-link is-disabled">Prev</span>
+    {% endif %}
+
+    {% for p in range(1, pagination.total_pages + 1) %}
+        {% if p == pagination.page %}
+            <span class="page-link is-active">{{ p }}</span>
+        {% else %}
+            <a class="page-link" href="{{ url_for('vehicle.vehicles', page=p) }}">{{ p }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if pagination.has_next %}
+        <a class="page-link" href="{{ url_for('vehicle.vehicles', page=pagination.next_page) }}">Next</a>
+    {% else %}
+        <span class="page-link is-disabled">Next</span>
+    {% endif %}
+</nav>
+{% endif %}
 
 {% endblock %}
