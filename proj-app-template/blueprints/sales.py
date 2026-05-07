@@ -68,13 +68,14 @@ def create_sale():
                 (sale_date, sale_price, financing_option, payment_method,
                  vehicle_id, customer_id, department_id, employee_id),
             )
+            # Capture sale_id NOW before the UPDATE overwrites cursor.lastrowid
+            sale_id = cursor.lastrowid
             # Automatically mark vehicle as sold
             cursor.execute(
                 "UPDATE Vehicle SET vehicle_availability_status = 'sold' WHERE vehicle_id = %s",
                 (vehicle_id,),
             )
             conn.commit()
-            sale_id = cursor.lastrowid
             cursor.close()
             conn.close()
             flash("Sale recorded successfully.", "success")
