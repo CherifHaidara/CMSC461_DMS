@@ -83,7 +83,7 @@ def add_vehicle():
             cursor = conn.cursor(dictionary=True)
 
             query = """
-                INSERT INTO VEHICLE
+                INSERT INTO Vehicle
                 (
                     vehicle_make,
                     vehicle_model,
@@ -154,7 +154,7 @@ def edit_vehicle(vehicle_id):
             vehicle_availability_status = request.form['vehicle_availability_status']
 
             query = """
-                UPDATE VEHICLE
+                UPDATE Vehicle
                 SET
                     vehicle_make = %s,
                     vehicle_model = %s,
@@ -190,7 +190,7 @@ def edit_vehicle(vehicle_id):
 
         query = """
             SELECT *
-            FROM VEHICLE
+            FROM Vehicle
             WHERE vehicle_id = %s
         """
 
@@ -227,7 +227,7 @@ def delete_vehicle(vehicle_id):
         cursor = conn.cursor(dictionary=True)
 
         query = """
-            DELETE FROM VEHICLE
+            DELETE FROM Vehicle
             WHERE vehicle_id = %s
         """
 
