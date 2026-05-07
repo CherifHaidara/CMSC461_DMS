@@ -16,6 +16,8 @@
                 {% if 'user_id' in session %}
                     <a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
                     <a href="{{ url_for('directory.directory') }}">Directory</a>
+                    <a href="{{ url_for('customer.customers') }}">Customers</a>
+                    <a href="{{ url_for('vehicle.vehicles') }}">Vehicles</a>
                     <a href="{{ url_for('finance.loans') }}">Loans</a>
                     <a href="{{ url_for('finance.reports') }}">Reports</a>
                     <a href="{{ url_for('finance.search') }}">Search</a>
