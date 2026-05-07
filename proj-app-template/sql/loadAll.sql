@@ -41,7 +41,12 @@ INSERT INTO EMPLOYEE (employee_id, first_name, last_name, emp_email, emp_phone, 
 (7, 'Michael', 'Turner', 'mturner@dealership.com', '301-555-0107', '2017-04-30', 70000.00, 'Accountant', 8),
 (8, 'Linda', 'Harris', 'lharris@dealership.com', '301-555-0108', '2023-02-20', 43000.00, 'Finance Support', 9),
 (9, 'Chris', 'Johnson', 'cjohnson@dealership.com', '301-555-0109', '2016-08-11', 80000.00, 'Administrator', 10),
-(10, 'Emily', 'White', 'ewhite@dealership.com', '301-555-0110', '2021-05-18', 46000.00, 'Parts Coordinator', 6);
+(10, 'Emily', 'White', 'ewhite@dealership.com', '301-555-0110', '2021-05-18', 46000.00, 'Parts Coordinator', 6),
+(11, 'Admin', 'User', 'admin@dealership.com', '301-555-0111', '2024-01-01', 85000.00, 'System Administrator', 10),
+(12, 'Sales', 'User', 'sales@dealership.com', '301-555-0112', '2024-01-01', 50000.00, 'Sales Associate', 1),
+(13, 'Service', 'User', 'service@dealership.com', '301-555-0113', '2024-01-01', 48000.00, 'Service Technician', 5),
+(14, 'Finance', 'User', 'finance@dealership.com', '301-555-0114', '2024-01-01', 62000.00, 'Finance Officer', 7),
+(15, 'Account', 'User', 'account@dealership.com', '301-555-0115', '2024-01-01', 65000.00, 'Accountant', 8);
 
 
 -- Users
@@ -55,7 +60,12 @@ INSERT INTO `USER` (user_id, username, password, employee_id, role_id, status) V
 (7, 'mturner', 'hashed_pw_7', 7, 5, 'Active'),
 (8, 'lharris', 'hashed_pw_8', 8, 4, 'Active'),
 (9, 'cjohnson', 'hashed_pw_9', 9, 1, 'Active'),
-(10, 'ewhite', 'hashed_pw_10', 10, 3, 'Active');
+(10, 'ewhite', 'hashed_pw_10', 10, 3, 'Active'),
+(11, 'admin', 'admin', 11, 1, 'Active'),
+(12, 'sales', 'sales', 12, 2, 'Active'),
+(13, 'service', 'service', 13, 3, 'Active'),
+(14, 'finance', 'finance', 14, 4, 'Active'),
+(15, 'account', 'account', 15, 5, 'Active');
 
 -- Customers
 INSERT INTO Customer (customer_name, customer_address, customer_email) VALUES
@@ -68,16 +78,19 @@ INSERT INTO Customer (customer_name, customer_address, customer_email) VALUES
 ('Chris White','147 Birch St','chris@example.com'),
 ('Anna Hall','258 Walnut St','anna@example.com'),
 ('David King','369 Cherry St','david@example.com'),
-('Lisa Scott','159 Spruce St','lisa@example.com');
+('Lisa Scott','159 Spruce St','lisa@example.com'),
+('Ryan Cooper','753 Lake St','ryan@example.com'),
+('Olivia Green','852 River St','olivia@example.com');
 
 -- Phone Numbers
 INSERT INTO PhoneNumber (phone_number, customer_id) VALUES
-('111-111-1111',1), ('222-222-2222',1),
+('111-111-1111',1), ('222-222-2222',10),
 ('333-333-3333',2), ('444-444-4444',3),
 ('555-555-5555',4), ('666-666-6666',5),
 ('777-777-7777',6), ('888-888-8888',7),
 ('999-999-9999',8), ('101-101-1010',9),
-('202-202-2020',10), ('303-303-3030',1);
+('202-202-2020',10), ('303-303-3030',1),
+('404-404-4040',11), ('505-505-5050',12);
 
 -- Vehicles
 INSERT INTO Vehicle (vehicle_make, vehicle_model, vehicle_year, vehicle_vin, vehicle_price, vehicle_mileage, vehicle_condition, vehicle_availability_status) VALUES
@@ -90,7 +103,9 @@ INSERT INTO Vehicle (vehicle_make, vehicle_model, vehicle_year, vehicle_vin, veh
 ('Nissan','Altima',2020,'VIN007',20000,30000,'used','available'),
 ('Hyundai','Elantra',2021,'VIN008',22000,18000,'used','available'),
 ('Kia','Sorento',2022,'VIN009',30000,12000,'used','sold'),
-('Chevy','Malibu',2023,'VIN010',26000,8000,'used','available');
+('Chevy','Malibu',2023,'VIN010',26000,8000,'used','available'),
+('Mazda','CX5',2024,'VIN011',32000,2000,'new','available'),
+('Jeep','Wrangler',2021,'VIN012',39000,22000,'used','available');
 
 -- Sales
 INSERT INTO Sale (sale_date, sale_price, financing_option, payment_method, vehicle_id, customer_id, department_id, employee_id) VALUES
@@ -103,7 +118,9 @@ INSERT INTO Sale (sale_date, sale_price, financing_option, payment_method, vehic
 ('2024-04-01',19000,'cash','cash',7,7,1,2),
 ('2024-04-15',21000,'lease','credit_card',8,8,3,4),
 ('2024-05-01',29000,'loan','debit_card',9,9,1,1),
-('2024-05-10',25000,'cash','cash',10,10,2,3);
+('2024-05-10',25000,'cash','cash',10,10,2,3),
+('2024-05-15',31500,'loan','bank_transfer',11,11,1,12),
+('2024-05-20',38500,'cash','cash',12,12,2,12);
 
 -- these should fail due to constraints
 
@@ -131,7 +148,9 @@ INSERT INTO SERVICE (service_type, service_date, service_cost, customer_id, vehi
 ('Alignment','2024-06-07',100,7,7,4,5),
 ('AC Repair','2024-06-08',350,8,8,5,5),
 ('Inspection','2024-06-09',90,9,9,4,5),
-('Detailing','2024-06-10',180,10,10,5,5);
+('Detailing','2024-06-10',180,10,10,5,5),
+('Window Tint','2024-06-11',250,11,11,13,5),
+('Suspension Repair','2024-06-12',900,12,12,13,5);
 
 
 INSERT INTO SERVICE_PART (part_name, quantity, part_cost, service_id) VALUES
@@ -144,20 +163,24 @@ INSERT INTO SERVICE_PART (part_name, quantity, part_cost, service_id) VALUES
 ('Alignment Kit',1,50,7),
 ('AC Compressor',1,250,8),
 ('Inspection Kit',1,30,9),
-('Cleaning Kit',1,40,10);
+('Cleaning Kit',1,40,10),
+('Tint Film',2,120,11),
+('Shock Absorber',4,500,12);
 
 
 INSERT INTO LOAN (loan_amount, interest_rate, loan_term, monthly_payment, status, customer_id, vehicle_id) VALUES
 (20000,5.5,60,380,'approved',1,1),
 (25000,6.0,72,420,'approved',2,2),
-(30000,4.5,60,560,'pending',3,3),
+(30000,4.5,60,560,'approved',3,3),
 (45000,5.0,84,650,'approved',4,4),
-(55000,6.5,72,900,'rejected',5,5),
+(55000,6.5,72,900,'approved',5,5),
 (40000,5.8,60,770,'approved',6,6),
 (18000,4.0,48,400,'approved',7,7),
-(22000,5.2,60,430,'pending',8,8),
+(22000,5.2,60,430,'approved',8,8),
 (28000,6.1,72,500,'approved',9,9),
-(26000,5.9,60,480,'approved',10,10);
+(26000,5.9,60,480,'approved',10,10),
+(30000,5.3,72,490,'approved',11,11),
+(35000,6.2,84,540,'approved',12,12);
 
 INSERT INTO LOAN_PAYMENT (payment_date, amount, loan_id) VALUES
 ('2026-04-01',380,1),
@@ -169,7 +192,9 @@ INSERT INTO LOAN_PAYMENT (payment_date, amount, loan_id) VALUES
 ('2026-04-07',450,7),
 ('2026-04-08',480,8),
 ('2026-04-09',310,9),
-('2026-04-10',370,10);
+('2026-04-10',370,10),
+('2026-04-11',490,11),
+('2026-04-12',540,12);
 
 -- Loan payments accounting
 INSERT INTO ACCOUNTING_TRANSACTION (transaction_type, amount, transaction_date, department_id, payment_id) VALUES
@@ -182,9 +207,13 @@ INSERT INTO ACCOUNTING_TRANSACTION (transaction_type, amount, transaction_date, 
 ('Loan Payment',450,'2026-04-07',7,7),
 ('Loan Payment',480,'2026-04-08',7,8),
 ('Loan Payment',310,'2026-04-09',7,9),
-('Loan Payment',370,'2026-04-10',7,10);
+('Loan Payment',370,'2026-04-10',7,10),
+('Loan Payment',490,'2026-04-11',7,11),
+('Loan Payment',540,'2026-04-12',7,12);
 
 -- Vehicle Sales accounting
 INSERT INTO ACCOUNTING_TRANSACTION (transaction_type, amount, transaction_date, department_id, sale_id) VALUES
 ('Vehicle Sale',24000,'2024-01-01',1,1),
-('Vehicle Sale',26000,'2024-01-05',1,2);
+('Vehicle Sale',26000,'2024-01-05',1,2),
+('Vehicle Sale',31500,'2024-05-15',1,11),
+('Vehicle Sale',38500,'2024-05-20',1,12);
