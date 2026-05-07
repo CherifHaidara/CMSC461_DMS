@@ -52,14 +52,37 @@
         </div>
 
         <div class="form-group">
-            <label for="customer_phone">Phone number</label>
-            <input
-                type="text"
-                id="customer_phone"
-                name="customer_phone"
-                value="{{ customer.customer_phone }}"
-                required
-            >
+            <label>Phone numbers</label>
+            <div id="phone-numbers-container">
+                {% if customer.phones %}
+                    {% for phone in customer.phones %}
+                    <div class="phone-input-group" style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <input
+                            type="text"
+                            name="phone_numbers"
+                            class="phone-input"
+                            value="{{ phone.phone_number }}"
+                            placeholder="Enter phone number"
+                        >
+                        {% if loop.index > 1 %}
+                        <button type="button" class="btn btn--danger btn--sm remove-phone-btn">Remove</button>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="phone-input-group" style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <input
+                        type="text"
+                        name="phone_numbers"
+                        class="phone-input"
+                        placeholder="Enter phone number"
+                    >
+                </div>
+                {% endif %}
+            </div>
+            <button type="button" id="add-phone-btn" class="btn btn--secondary btn--sm" style="margin-top: 0.5rem;">
+                + Add phone number
+            </button>
         </div>
 
         <div class="form-actions">
@@ -78,4 +101,42 @@
     </form>
 
 </div>
+
+<script>
+document.getElementById('add-phone-btn').addEventListener('click', function(e) {
+    e.preventDefault();
+    const container = document.getElementById('phone-numbers-container');
+    const newGroup = document.createElement('div');
+    newGroup.className = 'phone-input-group';
+    newGroup.style.display = 'flex';
+    newGroup.style.gap = '0.5rem';
+    newGroup.style.marginBottom = '0.5rem';
+    
+    newGroup.innerHTML = `
+        <input
+            type="text"
+            name="phone_numbers"
+            class="phone-input"
+            placeholder="Enter phone number"
+        >
+        <button type="button" class="btn btn--danger btn--sm remove-phone-btn">Remove</button>
+    `;
+    
+    container.appendChild(newGroup);
+    
+    // Add remove button handler
+    newGroup.querySelector('.remove-phone-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        newGroup.remove();
+    });
+});
+
+// Add remove button handler to existing phone inputs
+document.querySelectorAll('.remove-phone-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        this.parentElement.remove();
+    });
+});
+</script>
 {% endblock %}

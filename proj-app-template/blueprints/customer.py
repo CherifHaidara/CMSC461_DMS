@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, flash, request, redirect, url_for
 import mysql.connector
-from utils import get_db_connection, login_required, role_required
+from utils import get_db_connection, login_required, role_required, build_pagination
 
 customer_bp = Blueprint('customer', __name__)
 
@@ -8,41 +8,45 @@ customer_bp = Blueprint('customer', __name__)
 @customer_bp.route('/customers')
 @role_required(1, 2)
 def customers():
+    per_page = 10
+    page = request.args.get('page', 1, type=int)
 
-    customers_data = []
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
 
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+    # Get total count of customers
+    cursor.execute("SELECT COUNT(*) AS cnt FROM Customer")
+    total_items = cursor.fetchone()["cnt"]
+    pagination = build_pagination(page=page, total_items=total_items, per_page=per_page)
 
-        # JOIN PhoneNumber to get phone alongside customer info.
-        # GROUP_CONCAT handles customers with multiple numbers.
-        query = """
-            SELECT
-                c.customer_id,
-                c.customer_name,
-                c.customer_address,
-                c.customer_email,
-                GROUP_CONCAT(p.phone_number ORDER BY p.phone_id SEPARATOR ', ') AS customer_phone
-            FROM Customer c
-            LEFT JOIN PhoneNumber p ON c.customer_id = p.customer_id
-            GROUP BY c.customer_id
-        """
-        cursor.execute(query)
-        customers_data = cursor.fetchall()
-
-    except mysql.connector.Error as err:
-        flash(f"MySQL Error: {err}", "error")
-
-    finally:
-        if 'cursor' in locals() and cursor is not None:
-            cursor.close()
-        if 'conn' in locals() and conn is not None and conn.is_connected():
-            conn.close()
+    # JOIN PhoneNumber to get phone alongside customer info.
+    # Get only the FIRST phone number for the list view
+    query = """
+        SELECT
+            c.customer_id,
+            c.customer_name,
+            c.customer_address,
+            c.customer_email,
+            (
+                SELECT p.phone_number
+                FROM PhoneNumber p
+                WHERE p.customer_id = c.customer_id
+                ORDER BY p.phone_id
+                LIMIT 1
+            ) AS customer_phone
+        FROM Customer c
+        ORDER BY c.customer_id
+        LIMIT %s OFFSET %s
+    """
+    cursor.execute(query, (pagination["per_page"], pagination["offset"]))
+    customers_data = cursor.fetchall()
+    cursor.close()
+    conn.close()
 
     return render_template(
         'customers.html',
-        customers=customers_data
+        customers=customers_data,
+        pagination=pagination
     )
 
 
@@ -55,7 +59,7 @@ def add_customer():
         customer_name    = request.form['customer_name']
         customer_address = request.form['customer_address']
         customer_email   = request.form['customer_email']
-        customer_phone   = request.form['customer_phone']
+        phone_numbers    = request.form.getlist('phone_numbers')  # Get all phone numbers
 
         try:
             conn = get_db_connection()
@@ -69,13 +73,15 @@ def add_customer():
             cursor.execute(customer_query, (customer_name, customer_address, customer_email))
             new_customer_id = cursor.lastrowid
 
-            # Step 2: insert the phone number into the PhoneNumber table
-            if customer_phone:
+            # Step 2: insert all phone numbers into the PhoneNumber table
+            if phone_numbers:
                 phone_query = """
                     INSERT INTO PhoneNumber (phone_number, customer_id)
                     VALUES (%s, %s)
                 """
-                cursor.execute(phone_query, (customer_phone, new_customer_id))
+                for phone in phone_numbers:
+                    if phone.strip():  # Only insert non-empty phone numbers
+                        cursor.execute(phone_query, (phone.strip(), new_customer_id))
 
             conn.commit()
             flash("Customer added successfully.", "success")
@@ -108,7 +114,7 @@ def edit_customer(customer_id):
             customer_name    = request.form['customer_name']
             customer_address = request.form['customer_address']
             customer_email   = request.form['customer_email']
-            customer_phone   = request.form['customer_phone']
+            phone_numbers    = request.form.getlist('phone_numbers')  # Get all phone numbers
 
             # Step 1: update the Customer table (no phone column here)
             update_query = """
@@ -121,55 +127,46 @@ def edit_customer(customer_id):
             """
             cursor.execute(update_query, (customer_name, customer_address, customer_email, customer_id))
 
-            # Step 2: upsert the primary phone number in PhoneNumber.
-            # If one already exists, update the first record; otherwise insert.
-            if customer_phone:
-                check_query = """
-                    SELECT phone_id FROM PhoneNumber
-                    WHERE customer_id = %s
-                    ORDER BY phone_id
-                    LIMIT 1
-                """
-                cursor.execute(check_query, (customer_id,))
-                existing_phone = cursor.fetchone()
+            # Step 2: delete all existing phone numbers for this customer
+            delete_query = "DELETE FROM PhoneNumber WHERE customer_id = %s"
+            cursor.execute(delete_query, (customer_id,))
 
-                if existing_phone:
-                    phone_query = """
-                        UPDATE PhoneNumber
-                        SET phone_number = %s
-                        WHERE phone_id = %s
-                    """
-                    cursor.execute(phone_query, (customer_phone, existing_phone['phone_id']))
-                else:
-                    phone_query = """
-                        INSERT INTO PhoneNumber (phone_number, customer_id)
-                        VALUES (%s, %s)
-                    """
-                    cursor.execute(phone_query, (customer_phone, customer_id))
+            # Step 3: insert all new phone numbers
+            if phone_numbers:
+                phone_query = """
+                    INSERT INTO PhoneNumber (phone_number, customer_id)
+                    VALUES (%s, %s)
+                """
+                for phone in phone_numbers:
+                    if phone.strip():  # Only insert non-empty phone numbers
+                        cursor.execute(phone_query, (phone.strip(), customer_id))
 
             conn.commit()
             flash("Customer updated successfully.", "success")
             return redirect(url_for('customer.customers'))
 
-        # GET: fetch customer with their primary phone number
+        # GET: fetch customer with all phone numbers
         select_query = """
             SELECT
                 c.customer_id,
                 c.customer_name,
                 c.customer_address,
-                c.customer_email,
-                (
-                    SELECT p.phone_number
-                    FROM PhoneNumber p
-                    WHERE p.customer_id = c.customer_id
-                    ORDER BY p.phone_id
-                    LIMIT 1
-                ) AS customer_phone
+                c.customer_email
             FROM Customer c
             WHERE c.customer_id = %s
         """
         cursor.execute(select_query, (customer_id,))
         customer = cursor.fetchone()
+
+        # Fetch all phone numbers for this customer
+        phone_query = """
+            SELECT phone_id, phone_number
+            FROM PhoneNumber
+            WHERE customer_id = %s
+            ORDER BY phone_id
+        """
+        cursor.execute(phone_query, (customer_id,))
+        customer['phones'] = cursor.fetchall()
 
     except mysql.connector.Error as err:
         flash(f"MySQL Error: {err}", "error")

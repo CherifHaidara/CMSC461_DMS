@@ -5,19 +5,16 @@
 {% block content %}
 <div class="page-header">
     <div>
-        <h1 class="page-title">Dashboard</h1>
+        <h1 class="page-title">Welcome, {{ user_info.first_name or 'User' }}!</h1>
         <p class="page-subtitle">You are signed in and ready to work.</p>
     </div>
 </div>
 
 <div class="card card--padded card--measure-sm">
     <div class="session-info">
-        Active session user ID: <strong>{{ user_id }}</strong>
+        <p><strong>Name:</strong> {{ user_info.first_name }} {{ user_info.last_name }}</p>
+        <p><strong>Role:</strong> {{ user_info.role_name or 'Unknown' }}</p>
     </div>
-    <ul class="link-list">
-        <li><a href="{{ url_for('directory.directory') }}">Staff directory</a></li>
-        <li><a href="{{ url_for('finance.loans') }}">Loans</a></li>
-    </ul>
     <div class="form-actions">
         <a href="{{ url_for('auth.logout') }}" class="btn btn--danger btn--sm">Log out</a>
     </div>

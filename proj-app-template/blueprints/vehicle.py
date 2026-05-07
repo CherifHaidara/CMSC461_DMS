@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, flash, request, redirect, url_for
 import mysql.connector
-from utils import get_db_connection, login_required, role_required
+from utils import get_db_connection, login_required, role_required, build_pagination
 
 vehicle_bp = Blueprint('vehicle', __name__)
 
@@ -8,58 +8,60 @@ vehicle_bp = Blueprint('vehicle', __name__)
 @vehicle_bp.route('/vehicles')
 @role_required(1, 2)
 def vehicles():
-
-    vehicles_data = []
+    per_page = 10
+    page = request.args.get('page', 1, type=int)
 
     make = request.args.get('make', '')
     model = request.args.get('model', '')
     year = request.args.get('year', '')
 
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
 
-        query = """
-            SELECT *
-            FROM Vehicle
-            WHERE 1=1
-        """
+    # Build the WHERE clause
+    count_query = "SELECT COUNT(*) as cnt FROM Vehicle WHERE 1=1"
+    base_query = """
+        SELECT *
+        FROM Vehicle
+        WHERE 1=1
+    """
 
-        params = []
+    params = []
 
-        if make:
-            query += " AND vehicle_make LIKE %s"
-            params.append(f"%{make}%")
+    if make:
+        count_query += " AND vehicle_make LIKE %s"
+        base_query += " AND vehicle_make LIKE %s"
+        params.append(f"%{make}%")
 
-        if model:
-            query += " AND vehicle_model LIKE %s"
-            params.append(f"%{model}%")
+    if model:
+        count_query += " AND vehicle_model LIKE %s"
+        base_query += " AND vehicle_model LIKE %s"
+        params.append(f"%{model}%")
 
-        if year:
-            query += " AND vehicle_year = %s"
-            params.append(year)
+    if year:
+        count_query += " AND vehicle_year = %s"
+        base_query += " AND vehicle_year = %s"
+        params.append(year)
 
-        query += " ORDER BY vehicle_id DESC"
+    # Get total count
+    cursor.execute(count_query, tuple(params))
+    total_items = cursor.fetchone()["cnt"]
+    pagination = build_pagination(page=page, total_items=total_items, per_page=per_page)
 
-        cursor.execute(query, tuple(params))
+    # Add ORDER BY and pagination
+    base_query += " ORDER BY vehicle_id ASC LIMIT %s OFFSET %s"
+    params.append(pagination["per_page"])
+    params.append(pagination["offset"])
 
-        vehicles_data = cursor.fetchall()
-
-    except mysql.connector.Error as err:
-
-        flash(f"MySQL Error: {err}", "error")
-
-    finally:
-
-        if 'cursor' in locals() and cursor is not None:
-            cursor.close()
-
-        if 'conn' in locals() and conn is not None and conn.is_connected():
-            conn.close()
+    cursor.execute(base_query, tuple(params))
+    vehicles_data = cursor.fetchall()
+    cursor.close()
+    conn.close()
 
     return render_template(
         'vehicles.html',
-        vehicles=vehicles_data
+        vehicles=vehicles_data,
+        pagination=pagination
     )
 
 
