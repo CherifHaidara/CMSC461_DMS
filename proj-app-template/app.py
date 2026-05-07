@@ -5,7 +5,7 @@ from blueprints.dashboard import dashboard_bp
 from blueprints.directory import directory_bp
 from blueprints.finance import finance_bp
 from blueprints.admin import admin_bp
-from blueprints.customer import customer.bp
+from blueprints.customer import customer_bp
 from blueprints.vehicle import vehicle_bp
 
 app = Flask(__name__)
