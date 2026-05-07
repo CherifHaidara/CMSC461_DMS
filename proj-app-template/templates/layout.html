@@ -14,6 +14,7 @@
             <a class="brand" href="{% if 'user_id' in session %}{{ url_for('dashboard.dashboard') }}{% else %}{{ url_for('auth.login') }}{% endif %}">DMS</a>
             <nav class="nav-links" aria-label="Main">
                 {% if 'user_id' in session %}
+<<<<<<< HEAD
                     <a href="{{ url_for('dashboard.dashboard') }}" class="{% if request.path == '/dashboard' %}is-nav-active{% endif %}">Dashboard</a>
                     <a href="{{ url_for('directory.directory') }}" class="{% if request.path.startswith('/directory') %}is-nav-active{% endif %}">Directory</a>
                     <a href="{{ url_for('sales.sales_list') }}" class="{% if request.path.startswith('/sales') %}is-nav-active{% endif %}">Sales</a>
@@ -21,6 +22,15 @@
                     <a href="{{ url_for('finance.loans') }}" class="{% if request.path.startswith('/loans') %}is-nav-active{% endif %}">Loans</a>
                     <a href="{{ url_for('finance.reports') }}" class="{% if request.path.startswith('/reports') %}is-nav-active{% endif %}">Reports</a>
                     <a href="{{ url_for('finance.search') }}" class="{% if request.path.startswith('/search') %}is-nav-active{% endif %}">Search</a>
+=======
+                    <a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
+                    <a href="{{ url_for('directory.directory') }}">Directory</a>
+                    <a href="{{ url_for('customer.customers') }}">Customers</a>
+                    <a href="{{ url_for('vehicle.vehicles') }}">Vehicles</a>
+                    <a href="{{ url_for('finance.loans') }}">Loans</a>
+                    <a href="{{ url_for('finance.reports') }}">Reports</a>
+                    <a href="{{ url_for('finance.search') }}">Search</a>
+>>>>>>> 6d9b663522bf0a73407bb3f824d84b504960d02b
                     {% if session.get('user_role_id') == 1 %}
                         <a href="{{ url_for('admin.admin_home') }}" class="{% if request.path.startswith('/admin') %}is-nav-active{% endif %}">Admin</a>
                     {% endif %}
@@ -50,5 +60,24 @@
         </div>
     </main>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.collapsible-trigger').forEach(function (trigger) {
+                trigger.addEventListener('click', function () {
+                    var card = trigger.closest('.collapsible-card');
+                    if (!card) return;
+                    var collapsed = card.classList.toggle('collapsed');
+                    trigger.setAttribute('aria-expanded', !collapsed);
+                });
+
+                trigger.addEventListener('keydown', function (event) {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        trigger.click();
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

@@ -9,7 +9,7 @@
     <h1>Create account</h1>
     <p class="text-muted">Choose a username and password for DMS access.</p>
 
-    <form method="POST" action="{{ url_for('auth.register') }}" class="form-stack">
+    <form method="POST" action="{{ url_for('auth.register') }}" class="form-grid">
         <div class="form-group">
             <label for="username">Username</label>
             <input type="text" id="username" name="username" required autocomplete="username">
@@ -18,7 +18,41 @@
             <label for="password">Password</label>
             <input type="password" id="password" name="password" required autocomplete="new-password">
         </div>
-        <div class="form-actions">
+        <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" name="first_name" required>
+        </div>
+        <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" id="last_name" name="last_name" required>
+        </div>
+        <div class="form-group">
+            <label for="emp_email">Email</label>
+            <input type="email" id="emp_email" name="emp_email" required>
+        </div>
+        <div class="form-group">
+            <label for="emp_phone">Phone</label>
+            <input type="tel" id="emp_phone" name="emp_phone" required>
+        </div>
+        <div class="form-group">
+            <label for="role_id">Role</label>
+            <select id="role_id" name="role_id" required>
+                <option value="">Select Role</option>
+                {% for role in roles %}
+                <option value="{{ role.role_id }}">{{ role.role_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="department_id">Department</label>
+            <select id="department_id" name="department_id" required>
+                <option value="">Select Department</option>
+                {% for dept in departments %}
+                <option value="{{ dept.department_id }}">{{ dept.department_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-actions form-actions--full">
             <button type="submit" class="btn btn--primary btn--block">Register</button>
         </div>
     </form>

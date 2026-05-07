@@ -4,7 +4,14 @@
 
 {% block admin_content %}
 <div class="admin-header">
-    <h1>Divisions &amp; departments</h1>
+    <div>
+        <h1>Divisions &amp; departments</h1>
+        <p class="page-subtitle">Manage organizational structure and department status.</p>
+    </div>
+    <div class="admin-actions-row">
+        <a href="{{ url_for('admin.create_department') }}" class="admin-btn">+ Add department</a>
+        <a href="{{ url_for('admin.create_division') }}" class="admin-btn">+ Add division</a>
+    </div>
 </div>
 
 {% if divisions %}
@@ -20,21 +27,31 @@
     </div>
 
     {% for division in divisions %}
-        <div class="division-card">
+        <div class="division-card collapsible-card collapsed">
             <div class="division-header">
-                <h2>{{ division.division_name }}</h2>
-                <span class="division-id">Division ID: {{ division.division_id }}</span>
+                <div class="collapsible-trigger" role="button" tabindex="0" aria-expanded="false">
+                    <div>
+                        <h2>{{ division.division_name }}</h2>
+                        <span class="division-id">Division ID: {{ division.division_id }}</span>
+                    </div>
+                    <span class="chevron"></span>
+                </div>
+                <div class="section-actions">
+                    <a href="{{ url_for('admin.edit_division', division_id=division.division_id) }}" class="btn btn-small">Edit</a>
+                </div>
             </div>
 
-            {% if division.description %}
-                <div class="division-description">
-                    {{ division.description }}
-                </div>
-            {% endif %}
+            <div class="collapsible-body">
+                {% if division.description %}
+                    <div class="division-description">
+                        {{ division.description }}
+                    </div>
+                {% endif %}
 
-            <div class="departments-section">
-                <div class="departments-label">
-                    Departments ({{ division.dept_list|length }})
+                <div class="departments-section">
+                <div class="departments-header">
+                    <span class="departments-label">Departments ({{ division.dept_list|length }})</span>
+                    <a href="{{ url_for('admin.create_department', division_id=division.division_id) }}" class="btn btn-small">Add department</a>
                 </div>
 
                 {% if division.dept_list %}
@@ -50,6 +67,9 @@
                                     {{ dept.status }}
                                 </span>
                             </div>
+                            <div class="section-actions">
+                                <a href="{{ url_for('admin.edit_department', department_id=dept.department_id) }}" class="btn btn-small">Edit</a>
+                            </div>
                         </div>
                     {% endfor %}
                 {% else %}
@@ -58,6 +78,7 @@
                     </div>
                 {% endif %}
             </div>
+        </div>
         </div>
     {% endfor %}
 {% else %}
